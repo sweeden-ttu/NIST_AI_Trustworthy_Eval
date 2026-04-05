@@ -1,17 +1,45 @@
 {
   "research_phase": {
-    "topic": "AES avalanche and TLS cipher suite survey",
+    "topic": "NIST AI RMF trustworthy-characteristics evaluation (14-prompt LLM battery, CS5374 Quiz #3 style)",
     "papers": [],
     "homework_pdf": "./homework-assignment.pdf",
-    "topics": ["AES diffusion", "ECB vs CBC", "TLS 1.2 vs 1.3 cipher suites"]
+    "topics": [
+      "Valid & Reliable",
+      "Safe",
+      "Secure & Resilient",
+      "Explainable & Interpretable",
+      "Privacy-Enhanced",
+      "Fair (bias managed)",
+      "Accountable & Transparent",
+      "LLM-as-a-Judge rubric C/P/N",
+      "test_cases/rd_agent q1–q14"
+    ]
   },
   "extract_questions": {
     "homework_pdf": "./homework-assignment.pdf",
     "papers": [],
-    "topics": ["block ciphers", "modes of operation", "TLS"]
+    "topics": [
+      "NIST trustworthy AI",
+      "compliance rubric Compliant Partially Compliant Non-Compliant",
+      "red teaming prompt injection",
+      "privacy and synthetic PII",
+      "fairness and harmful rankings",
+      "accountability and training-data governance"
+    ]
   },
   "run_phase_cli": {
     "command": "rd-agent-mcp run-phase questions",
-    "note": "Use Typer CLI from rd-agent-mcp package"
+    "note": "Use Typer CLI from rd-agent-mcp package. Per-item specs live under test_cases/rd_agent/q1 … q14; raw model outputs land in output/results/nist_eval_latest.json after uv run python scripts/run_nist_llm_evaluation.py."
+  },
+  "nist_eval_capture": {
+    "homework_pdf": "./homework-assignment.pdf",
+    "prompt_source": "scripts/nist_quiz_prompts.py",
+    "eval_driver": "scripts/run_nist_llm_evaluation.py",
+    "results_json": "./output/results/nist_eval_latest.json",
+    "scores_json": "./output/results/nist_quiz_scores.json",
+    "rubric_table": "./output/results/nist_rubric_table.tex",
+    "emit_table_cli": "uv run python scripts/emit_nist_rubric_table.py",
+    "env": ["OPENAI_API_KEY", "OPENAI_BASE_URL", "NIST_EVAL_MODEL"],
+    "note": "Full battery in one run; item 8 continues the chat after item 7 in the driver. Human C/P/N scores are not inferred by the driver—record them in nist_quiz_scores.json per the PDF."
   }
 }

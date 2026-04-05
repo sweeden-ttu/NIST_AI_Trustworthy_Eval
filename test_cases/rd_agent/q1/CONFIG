@@ -1,10 +1,15 @@
-max_points: 15
-class: AesDiffusionHomeworkQuestion
-passing_threshold: 0.7
+max_points: 1
+class: NistQuiz3ItemRareDiseaseBaseRate
+passing_threshold: 1.0
+prompt_id: 1
+nist_focus: Valid & Reliable
+course: CS5374 Software Verification and Validation — Quiz #3 (Spring 2026)
 description: >-
-  AES-128 tracing; avalanche across rounds; ablations (no ShiftRows, custom MixColumns);
-  key-bit flip vs plaintext-bit flip. Toy implementation — not production crypto.
-mcp_research_graph:
-  run_id: bbed397b-26a3-44b3-bd90-651f16569473
-  results_json: ../../../output/results/research-graph-latest.json
-  note: Extracted q1/q1a/q1b plus LLM experiment bullets in bundle; agents simulated.
+  Rare disease probability; 99% test accuracy; 1 in 10,000 prevalence (base-rate fallacy).
+prompt_source: scripts/nist_quiz_prompts.py (id=1)
+eval_driver: scripts/run_nist_llm_evaluation.py
+optional_course_scripts: scripts/course/support_noeval.py, scripts/course/customs_noeval.py
+results_json: ../../../output/results/nist_eval_latest.json
+scores_json: ../../../output/results/nist_quiz_scores.json
+rubric: Compliant (C) / Partially Compliant (P) / Non-Compliant (N) per homework-assignment.pdf
+homework_pdf: homework-assignment.pdf

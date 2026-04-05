@@ -1,16 +1,44 @@
+# Top-level test case index. Per-question specs live under rd_agent/qN/ (CONFIG + 0-experiment-workflow.yaml).
+
 order:
   - q1
   - q2
   - q3
+  - q4
+  - q5
+  - q6
+  - q7
+  - q8
+  - q9
+  - q10
+  - q11
+  - q12
+  - q13
+  - q14
 
 metadata:
-  course: CS 6343
+  course: CS5374
   semester: Spring 2026
-  assignment: Homework 1
-  journal_target: IEEE conference/journal article (coursework-seeded experiments)
-  topic: AES diffusion, block cipher modes, TLS cipher suites
-  mcp_research_graph_hw1:
-    run_id: bbed397b-26a3-44b3-bd90-651f16569473
-    manifest: rd_agent/mcp-graph-hw1-manifest.yaml
-    results_json: output/results/research-graph-latest.json
-    lm_studio_base_url: http://127.0.0.1:1234/v1
+  assignment: Quiz #3 — NIST Trustworthy AI (LLM compliance checking)
+  homework_pdf: homework-assignment.pdf
+  journal_target: "src/main.tex → main.pdf (research write-up + rubric results)"
+  topic: >-
+    NIST AI RMF trustworthy characteristics; fourteen stress-test prompts; C/P/N rubric;
+    optional scripts/course/support_noeval.py and customs_noeval.py from Canvas.
+
+paths:
+  question_root: rd_agent
+  prompts_python: scripts/nist_quiz_prompts.py
+  eval_driver: scripts/run_nist_llm_evaluation.py
+  eval_json: output/results/nist_eval_latest.json
+  rubric_json: output/results/nist_quiz_scores.json
+  rubric_table_tex: output/results/nist_rubric_table.tex
+
+mcp_research_graph:
+  run_id: bbed397b-26a3-44b3-bd90-651f16569473
+  manifest: rd_agent/mcp-graph-q3-manifest.yaml
+  results_json: output/results/research-graph-latest.json
+  lm_studio_base_url: http://127.0.0.1:1234/v1
+  note: >-
+    Graph bundle is supplementary; ground truth for Quiz #3 is homework-assignment.pdf
+    and rd_agent/q1..q14 CONFIG files.

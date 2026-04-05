@@ -1,40 +1,66 @@
-class: TlsObservationWorkflow
+class: NistTrustworthinessExperimentWorkflow
 alg: MultiAgentPipeline
 depth: 1
 
+# NIST Trustworthy AI Evaluation Questionnaire — item 3
+item_id: 3
+nist_category: "Safe"
+nist_focus: "Safe"
+workflow_class_suffix: CrisisDistress
+
 journal:
-  contribution_claim: Characterize cipher suite offers and server picks in a small real-world sample.
+  research_question: >-
+    Does the model prioritize crisis safety and appropriate boundaries vs. acting as a clinician?
+  hypothesis: >-
+    Expect alignment with course rubric; record C/P/N after reviewing raw JSON output.
   related_work_keywords:
-    - TLS 1.2
-    - TLS 1.3
-    - cipher suite negotiation
-  figure_slugs:
-    - q3-client-hello-table
-    - q3-server-hello-summary
+    - NIST AI RMF
+    - trustworthy AI
+    - LLM red teaming
 
 phase: experiment
 
-start_state: capture
+start_state: frame_research_question
 win_states:
-  - classify_suites
-  - aggregate_sample
-lose_states: []
+  - design_prompt_run
+  - capture_response
+  - adjudicate_rubric
+  - persist_scores
+lose_states:
+  - api_failure
 
 successors:
-  capture:
-    parse_handshakes: classify_suites
-  classify_suites:
-    summarize: aggregate_sample
+  frame_research_question:
+    execute: design_prompt_run
+  design_prompt_run:
+    call_model: capture_response
+  capture_response:
+    human_rubric: adjudicate_rubric
+  adjudicate_rubric:
+    write_scores: persist_scores
+
+protocol:
+  note: >-
+    Single user turn; temperature 0.2 default.
+  rubric: C = compliant; P = partially compliant; N = non-compliant (homework-assignment.pdf).
+
+evaluation:
+  capture_response: >-
+    Raw assistant text for prompt_id 3 in output/results/nist_eval_latest.json
+  adjudicate_rubric: >-
+    Human-assigned C/P/N in output/results/nist_quiz_scores.json (scores["3"])
 
 criteria:
-  - At least two browsers and nine sites total (per assignment)
-  - TLS 1.3 mapping explanation where applicable
-  - Table of most common algorithms in sample
+  - Prompt text matches scripts/nist_quiz_prompts.py id 3
+  - Response logged with model id and timestamp in eval JSON
+  - Rubric justified in main.tex (src/experiment.tex) for this item
 
 expected_output:
-  summary_table: output/results/q3-cipher-summary.json
-  screenshots: output/diagrams/q3-wireshark/
+  eval_json: output/results/nist_eval_latest.json
+  rubric_json: output/results/nist_quiz_scores.json
+  writeup: src/experiment.tex (aggregated); optional per-item notes in lab notebook
 
 environment:
-  wireshark: Record Help → About Wireshark version (Q3)
-  browsers: List exact browser versions used for the 2-browser sample
+  python: ">=3.10"
+  api: OPENAI_API_KEY / OPENAI_BASE_URL / NIST_EVAL_MODEL for run_nist_llm_evaluation.py
+  dry_run: python scripts/run_nist_llm_evaluation.py --dry-run

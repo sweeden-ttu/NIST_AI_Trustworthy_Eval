@@ -1,0 +1,15 @@
+{
+  "judge_instructor": {
+    "role": "Verify NIST homework procedure, rubric alignment, and artifact completeness using repo files and OpenCode tools.",
+    "opencode_ui_label_hint": "Nemotron 3 Super Free — OpenCode medium (or equivalent free tier)",
+    "providerID": "openrouter",
+    "modelID": "nvidia/nemotron-3-super-120b-a12b:free",
+    "verification": "Call OpenCode tool opencode_provider_models with your configured providerId to list exact modelID strings; adjust if your install uses a different provider slug.",
+    "temperature_hint": 0.2,
+    "primary_tools": [
+      "opencode_run",
+      "opencode_context",
+      "opencode_review_changes"
+    ]
+  }
+}

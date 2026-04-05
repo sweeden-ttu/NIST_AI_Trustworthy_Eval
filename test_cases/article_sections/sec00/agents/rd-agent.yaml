@@ -11,7 +11,7 @@ command:
   args:
     - --task
     - >-
-      Iterative refinement pass for IEEEtran article section `Executive Summary` in `src/sec/0_abstract.tex`. Ground truth artifacts (regenerate with `python scripts/run_coursework_outputs.py`): `output/results/q1-summary.json`, `output/results/q2/openssl_run.json`, `output/results/q3-cipher-summary.json`, and PDFs under `output/diagrams/` (especially q1-*.pdf, q2-*.pdf, q3-*.pdf cited from Results). Goals: (1) Align prose and numbers with JSON/PDFs; (2) keep LaTeX IEEE-safe; (3) use \strength, \weakness, \suggestion macros from src/review_macros.tex where this section uses review-style annotations; (4) fix figure paths/labels/captions to match repo layout; (5) flag any claim not supported by the toy AES / OpenSSL / openssl s_client methodology. Output: write a merge-ready snippet to output/article_iterations/sec00/rd-agent-revision.tex (section body only, no documentclass).
+      Iterative refinement pass for IEEEtran article section `Executive Summary` in `src/sec/0_abstract.tex`. **Prerequisites:** the full 14-prompt NIST Quiz battery has been run. **Primary ground truth:** `output/results/nist_eval_latest.json` (top-level `items` with numeric `id` 1–14, each with `prompt`, `response`, `error`; item 8 may include a `note` about the 2-turn thread after item 7), `output/results/nist_quiz_scores.json` (object `scores` whose JSON keys are the strings 1 through 14 and values are `C`, `P`, or `N` per `homework-assignment.pdf`), optional `output/results/nist_rubric_table.tex`, and prompt text parity via `scripts/nist_quiz_prompts.py`. **Rubric source of truth:** `homework-assignment.pdf` (repo root). Section focus: **executive synthesis** across **all 14** questionnaire items—themes, trustworthiness takeaways, and the evaluated **model** string from `nist_eval_latest.json`; if you summarize compliance, align counts or patterns with `scores` in `nist_quiz_scores.json`. Explicitly note **item 7→8 threading** if either item is discussed. **Common goals:** keep LaTeX IEEE-safe; use \strength, \weakness, \suggestion macros from `src/review_macros.tex` where this section uses review-style annotations. **Legacy crypto coursework** (`scripts/run_coursework_outputs.py`, `output/diagrams/`, q1–q3 JSON) is **out of scope** unless this section explicitly cites those artifacts. **Output:** write a merge-ready snippet to `output/article_iterations/sec00/rd-agent-revision.tex` (section body only, no \documentclass).
     - --output
     - output/article_iterations/sec00/rd-agent
 
@@ -52,8 +52,7 @@ llm_calls:
       ---
       {section_source}
       ---
-      List concrete mismatches vs coursework outputs (paths above) and missing citations.
-      JSON only.
+      List concrete mismatches vs NIST artifacts (`output/results/nist_eval_latest.json`, `output/results/nist_quiz_scores.json`, optional `output/results/nist_rubric_table.tex`, `homework-assignment.pdf`, `scripts/nist_quiz_prompts.py`). Flag any claim not supported by those sources. JSON only.
   - purpose: section_rewrite
     model: ibm/granite-4-h-tiny
     prompt_template: |

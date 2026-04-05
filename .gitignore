@@ -1,4 +1,5 @@
 examples/
+.venv/
 .DS_Store
 homework-assignment.pdf
 homework-assignment.txt

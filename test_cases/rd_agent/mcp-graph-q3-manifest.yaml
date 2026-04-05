@@ -1,0 +1,39 @@
+# rd-agent-mcp ResearchGraph — Quiz #3 (NIST LLM evaluation). See mcp/examples/research-graph-overview.md
+run_id: bbed397b-26a3-44b3-bd90-651f16569473
+homework_pdf: homework-assignment.pdf
+homework_txt_sidecar: homework-assignment.txt
+lm_studio_base_url: http://127.0.0.1:1234/v1
+phases_executed:
+  - extract_questions
+  - generate_embeddings
+  - design_experiments
+  - design_prompts
+  - run_agents
+  - compile_results
+agent_execution: simulated
+env_note: RD_AGENT_MCP_EXEC_AGENTS=false for this run; set true only in trusted environments.
+output_bundle: output/results/research-graph-latest.json
+output_bundle_timestamped: output/results/research-graph-bbed397b-26a3-44b3-bd90-651f16569473.json
+ieee_latex_stubs: output/snippets/ieee-latex-stubs-research-graph.tex
+chroma_persist_dir: output/embeddings/chroma_data
+extracted_question_ids:
+  - q1
+  - q2
+  - q3
+  - q4
+  - q5
+  - q6
+  - q7
+  - q8
+  - q9
+  - q10
+  - q11
+  - q12
+  - q13
+  - q14
+quality_notes:
+  quiz3_nist: >-
+    Ground truth for Spring 2026 Quiz #3 is the NIST Trustworthy AI Evaluation Questionnaire
+    (14 items). Each qN folder has CONFIG + 0-experiment-workflow.yaml mapping to
+    scripts/nist_quiz_prompts.py id N, output/results/nist_eval_latest.json, and nist_quiz_scores.json.
+  q7_q8_thread: Item 8 is evaluated in the same chat thread after Item 7 (run_nist_llm_evaluation.py).

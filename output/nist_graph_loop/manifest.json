@@ -1,0 +1,27 @@
+{
+  "repo_root": "/Users/sweeden/NIST_AI_Trustworthy_Eval",
+  "kb_status": "skipped",
+  "eval_status": "ok",
+  "prompt_files": [
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_01.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_02.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_03.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_04.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_05.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_06.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_07.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_08.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_09.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_10.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_11.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_12.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_13.md",
+    "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/nist_graph_loop/prompts/item_14.md"
+  ],
+  "opencode": {
+    "system_brief": "knowledge_base/opencode/NIST_JUDGE_INSTRUCTOR_SYSTEM.md",
+    "templates": "knowledge_base/opencode/OPENCODE_RUN_TEMPLATES.md",
+    "models": "knowledge_base/opencode/recommended_models.json"
+  },
+  "errors": []
+}

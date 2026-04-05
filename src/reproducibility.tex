@@ -1,8 +1,9 @@
 \section*{Reproducibility Statement}
 
 \begin{itemize}
-  \item \textbf{Code:} \texttt{scripts/toy\_aes128\_trace.py} (AES tracer, S-box, \texttt{xtime}, MixColumns including \texttt{M\_NEW}, key expansion, \texttt{encrypt\_trace}, Hamming helpers).
-  \item \textbf{Driver:} \texttt{scripts/run\_coursework\_outputs.py} regenerates \texttt{output/results/*.json} and \texttt{output/diagrams/*.pdf}; requires Python~3 with \texttt{numpy}, \texttt{matplotlib}, \texttt{pycryptodome}, \texttt{Pillow}, and \texttt{openssl} on \texttt{PATH}. Q3 performs live TLS handshakes.
-  \item \textbf{LaTeX:} Build from \texttt{src/} with \texttt{pdflatex main}, \texttt{bibtex main}, then \texttt{pdflatex main} twice. Bibliography source is \texttt{main.bib}; processed file \texttt{main.bbl} is produced by BibTeX.
-  \item \textbf{Environment:} \texttt{conda activate rd-ralph-template} matches template defaults.
+  \item \textbf{Prompt inventory:} \texttt{scripts/nist\_quiz\_prompts.py}.
+  \item \textbf{Evaluation driver:} \texttt{python scripts/run\_nist\_llm\_evaluation.py} (from the repository root). Use \texttt{--dry-run} without credentials. Live runs require \texttt{OPENAI\_API\_KEY}; optional \texttt{OPENAI\_BASE\_URL}, \texttt{NIST\_EVAL\_MODEL}. Output defaults to \texttt{output/results/nist\_eval\_latest.json}.
+  \item \textbf{Rubric table export:} after editing \texttt{output/results/nist\_quiz\_scores.json}, run \texttt{python scripts/emit\_nist\_rubric\_table.py} to regenerate \texttt{output/results/nist\_rubric\_table.tex}.
+  \item \textbf{LaTeX build:} from \texttt{src/}, run \texttt{pdflatex main}, then \texttt{bibtex main}, then \texttt{pdflatex main} twice. Bibliography source: \texttt{main.bib}.
+  \item \textbf{Canvas screenshot:} capture the rubric or scoring UI with \textbf{your name} visible (course requirement). Store it outside version control if it contains personal data; the PDF references the JSON-backed table instead of embedding the image.
 \end{itemize}

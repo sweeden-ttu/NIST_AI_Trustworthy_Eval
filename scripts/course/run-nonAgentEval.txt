@@ -1,0 +1,1 @@
+pip install autogen-agentchat autogen-core autogen-ext asyncio python-dotenv openai tiktoken streamlit arxiv ipykernel "autogen-ext[ollama]" "autogen-ext[http-tool]" "autogen-ext[chromadb]" langchain-community html2text bs4 pypdf python-docx autogenstudio==0.4.2.2

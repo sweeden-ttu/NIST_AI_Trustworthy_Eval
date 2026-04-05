@@ -1,5 +1,9 @@
 # Assets
 
-Place **`Secret.bmp`** here for Question 2 (ECB vs CBC) workflows referenced in `test_cases/rd_agent/q2/0-experiment-workflow.yaml`.
+## Quiz #3 (NIST trustworthy AI)
 
-If the file cannot be redistributed, keep a private copy locally and do not commit it; update the `assets.secret_bmp` path in YAML to match your layout.
+No binary assets are required. Prompts and evaluation paths are documented under `test_cases/rd_agent/q1` through `q14` (`CONFIG` + `0-experiment-workflow.yaml` per questionnaire item).
+
+## Legacy (older homework)
+
+`Secret.bmp` was used for an earlier ECB/CBC lab. Not used by the current NIST `q2` folder. If you still run legacy OpenSSL workflows, place **`Secret.bmp`** here and keep it out of version control if redistribution is restricted.

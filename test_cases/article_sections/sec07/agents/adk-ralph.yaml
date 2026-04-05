@@ -9,7 +9,8 @@ command:
   args:
     - run
     - --
-    - LaTeX hygiene pass for `src/sec/7_questions_authors.tex` (Questions for Authors) in ieee_journal project. Add or run a small Rust or Python helper under `output/article_iterations/sec07/adk-ralph/` that: (1) strips trailing whitespace / checks brace balance on the section file; (2) lists \includegraphics paths and verifies files exist under output/diagrams/; (3) emits a short `report.md` with suggested patches (diff-style or line numbers). Do not remove content; only structural and consistency fixes.
+    - >-
+      NIST consistency + LaTeX hygiene for `src/sec/7_questions_authors.tex` (Questions for Authors). Under `output/article_iterations/sec07/adk-ralph/`, add or run a small helper (Rust or Python) that: (1) Verifies `output/results/nist_eval_latest.json` exists and that `items[].id` covers integers 1–14 uniquely; (2) Verifies `output/results/nist_quiz_scores.json` contains `scores` with every JSON key from the strings 1 through 14; (3) Strips trailing whitespace and checks brace balance on the section .tex file; (4) Lists paths from \includegraphics commands in that section and reports only missing files that are actually referenced; (5) Emits `report.md` and `latex-hygiene.json` with findings. Mention item 7→8 threading if item 8 appears in eval JSON. Section-specific emphasis: Ensure questions reference concrete item ids or observable model behaviors where possible. Do not remove substantive narrative; structural fixes and reports only. Re-run after a fresh `uv run python scripts/run_nist_llm_evaluation.py` when raw responses change.
   working_dir: output/article_iterations/sec07/adk-ralph
 
 environment:
@@ -27,7 +28,7 @@ chroma:
 
 tools:
   - name: generate_json
-    description: Machine-readable report (graphics paths, warnings)
+    description: Machine-readable report (JSON coverage, graphics paths, warnings)
     output: output/article_iterations/sec07/adk-ralph/latex-hygiene.json
 
 artifacts:
@@ -44,11 +45,10 @@ timeout: 900
 phases:
   prd:
     prompt: |
-      PRD: tool to validate `src/sec/7_questions_authors.tex` against repo figure paths and basic LaTeX sanity.
+      PRD: validate `src/sec/7_questions_authors.tex` against NIST eval JSON, rubric scores JSON, and basic LaTeX sanity. Ensure questions reference concrete item ids or observable model behaviors where possible.
   architect:
     prompt: |
-      Design: parse .tex for includegraphics, existence-check under ../output/diagrams from src/;
-      output Markdown report in output/article_iterations/sec07/adk-ralph/.
+      Design: parse eval JSON for items 1–14; parse scores keys; parse .tex for includegraphics; write Markdown + JSON under output/article_iterations/sec07/adk-ralph/.
   loop:
     prompt: |
-      Implement minimal CLI; document rerun after each `python scripts/run_coursework_outputs.py`.
+      Implement minimal CLI; document rerun after `uv run python scripts/run_nist_llm_evaluation.py` when updating raw responses.

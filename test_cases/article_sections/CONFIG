@@ -2,8 +2,16 @@
 kind: article_sections
 description: >-
   Per-section rd-agent / adk-ralph YAML specs for iterative improvement of LaTeX sections
-  after running scripts/run_coursework_outputs.py. Not a graded homework CONFIG; optional
-  for rd-agent-mcp validate-tests (may ignore unknown roots).
+  after the NIST trustworthy-AI questionnaire battery (`scripts/run_nist_llm_evaluation.py`)
+  and recorded scores (`output/results/nist_quiz_scores.json`). Not a graded homework CONFIG;
+  optional for rd-agent-mcp validate-tests (may ignore unknown roots).
 ieee_driver: src/ieee_journal.tex
 section_glob: src/sec/*.tex
 workflow_doc: test_cases/article_sections/README.md
+nist_eval_driver: scripts/run_nist_llm_evaluation.py
+nist_rubric_emitter: scripts/emit_nist_rubric_table.py
+nist_eval_json: output/results/nist_eval_latest.json
+nist_scores_json: output/results/nist_quiz_scores.json
+nist_rubric_tex: output/results/nist_rubric_table.tex
+homework_pdf: homework-assignment.pdf
+nist_prompts_py: scripts/nist_quiz_prompts.py
