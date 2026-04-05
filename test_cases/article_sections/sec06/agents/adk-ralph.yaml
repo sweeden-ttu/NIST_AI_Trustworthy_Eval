@@ -1,0 +1,54 @@
+agent:
+  name: adk-ralph-article-sec06
+  type: adk-ralph
+  model: granite4:3b
+  provider: ollama
+
+command:
+  binary: cargo
+  args:
+    - run
+    - --
+    - LaTeX hygiene pass for `src/sec/6_detailed_comments.tex` (Detailed Technical Comments) in ieee_journal project. Add or run a small Rust or Python helper under `output/article_iterations/sec06/adk-ralph/` that: (1) strips trailing whitespace / checks brace balance on the section file; (2) lists \includegraphics paths and verifies files exist under output/diagrams/; (3) emits a short `report.md` with suggested patches (diff-style or line numbers). Do not remove content; only structural and consistency fixes.
+  working_dir: output/article_iterations/sec06/adk-ralph
+
+environment:
+  OLLAMA_HOST: http://localhost:11434
+  RALPH_MODEL_PROVIDER: ollama
+  RALPH_LOCAL_MODEL: granite4:3b
+
+chroma:
+  collection: research
+  metadata:
+    phase: article_iteration
+    question_id: article-sec06
+    agent_type: adk-ralph
+    section_tex: src/sec/6_detailed_comments.tex
+
+tools:
+  - name: generate_json
+    description: Machine-readable report (graphics paths, warnings)
+    output: output/article_iterations/sec06/adk-ralph/latex-hygiene.json
+
+artifacts:
+  - prd.md
+  - design.md
+  - tasks.json
+
+retry:
+  max_attempts: 2
+  backoff: linear
+
+timeout: 900
+
+phases:
+  prd:
+    prompt: |
+      PRD: tool to validate `src/sec/6_detailed_comments.tex` against repo figure paths and basic LaTeX sanity.
+  architect:
+    prompt: |
+      Design: parse .tex for includegraphics, existence-check under ../output/diagrams from src/;
+      output Markdown report in output/article_iterations/sec06/adk-ralph/.
+  loop:
+    prompt: |
+      Implement minimal CLI; document rerun after each `python scripts/run_coursework_outputs.py`.

@@ -1,0 +1,16 @@
+order:
+  - q1
+  - q2
+  - q3
+
+metadata:
+  course: CS 6343
+  semester: Spring 2026
+  assignment: Homework 1
+  journal_target: IEEE conference/journal article (coursework-seeded experiments)
+  topic: AES diffusion, block cipher modes, TLS cipher suites
+  mcp_research_graph_hw1:
+    run_id: bbed397b-26a3-44b3-bd90-651f16569473
+    manifest: rd_agent/mcp-graph-hw1-manifest.yaml
+    results_json: output/results/research-graph-latest.json
+    lm_studio_base_url: http://127.0.0.1:1234/v1

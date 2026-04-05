@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-04-05T00:46:56.322356+00:00",
+  "method": "openssl s_client (live TLS); supplement with Wireshark ClientHello captures for coursework",
+  "hosts": [
+    {
+      "host": "google.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "github.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "cloudflare.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "apple.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "microsoft.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-AES256-GCM-SHA384",
+      "openssl_exit": 0
+    },
+    {
+      "host": "mozilla.org",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "wikipedia.org",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-CHACHA20-POLY1305-SHA256",
+      "openssl_exit": 0
+    },
+    {
+      "host": "eff.org",
+      "protocol": "TLSv1.2",
+      "negotiated_cipher": "ECDHE-ECDSA-AES256-GCM-SHA384",
+      "openssl_exit": 0
+    },
+    {
+      "host": "amazon.com",
+      "protocol": "TLSv1.3",
+      "negotiated_cipher": "AEAD-AES128-GCM-SHA256",
+      "openssl_exit": 0
+    }
+  ]
+}

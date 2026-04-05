@@ -1,0 +1,63 @@
+{
+  "run_id": "homework-seeded-2026-04-04",
+  "provenance": "Seeded from homework-assignment.txt and test_cases/rd_agent/*.yaml because rd-agent-mcp LangGraph LLM/embed steps require a running LM Studio at LM_STUDIO_BASE_URL (unreachable in this run). Re-run: conda activate rd-agent-mcp && cd rd-ralph-template && python -c '...ResearchGraph...' with LM Studio up.",
+  "questions": [
+    {
+      "id": "q1",
+      "text": "AES avalanche, ShiftRows, and MixColumns (AES-128 toy tracer; parts A–D).",
+      "sub_questions": [
+        {"id": "q1a", "text": "Part A: P vs P' one-bit flip; log states rounds 0–10; byte/bit Hamming; diffusion round + 10-plaintext variant."},
+        {"id": "q1b", "text": "Part B: ShiftRows disabled; repeat Part A."},
+        {"id": "q1c", "text": "Part C: Custom MixColumns M_new; ShiftRows on; repeat Part A."},
+        {"id": "q1d", "text": "Part D: Key K vs K' one-bit flip; repeat A–C for key; tabulate."}
+      ],
+      "related_work": [],
+      "expected_outcome": "Per-round state logs, Hamming metrics, figures q1-hamming-rounds, ablation plots; output/results/q1-summary.json"
+    },
+    {
+      "id": "q2",
+      "text": "ECB vs CBC on Secret.bmp with OpenSSL; random key/IV; header fix first 54 bytes; screenshots and explanation.",
+      "sub_questions": [],
+      "related_work": [],
+      "expected_outcome": "Artifacts under output/results/q2/; figures q2-ecb-noise, q2-cbc-noise, header-fixed variants"
+    },
+    {
+      "id": "q3",
+      "text": "Wireshark TLS: Client Hello suites, classify KEX/auth/cipher/mode/MAC; TLS 1.3 nuance; Server Hello; 2 browsers × 9 sites.",
+      "sub_questions": [],
+      "related_work": [],
+      "expected_outcome": "output/results/q3-cipher-summary.json; screenshots output/diagrams/q3-wireshark/"
+    }
+  ],
+  "experiments": [
+    {
+      "question_id": "q1",
+      "test_cases": [{"workflow": "test_cases/rd_agent/q1/0-experiment-workflow.yaml"}],
+      "configs": {"graph_phase": "design_experiments", "note": "YAML defines successor graph and evaluation rubric"}
+    },
+    {
+      "question_id": "q2",
+      "test_cases": [{"workflow": "test_cases/rd_agent/q2/0-experiment-workflow.yaml"}],
+      "configs": {"asset": "assets/Secret.bmp"}
+    },
+    {
+      "question_id": "q3",
+      "test_cases": [{"workflow": "test_cases/rd_agent/q3/0-experiment-workflow.yaml"}],
+      "configs": {"capture": "Wireshark TLS handshakes"}
+    }
+  ],
+  "agent_results": [
+    {
+      "agent_id": "rd-agent-mcp-stub",
+      "agent_type": "coordinator",
+      "output": {
+        "status": "simulated",
+        "RD_AGENT_MCP_EXEC_AGENTS": "false",
+        "message": "Enable RD_AGENT_MCP_EXEC_AGENTS=true only in trusted environments to run agents/rd-agent and agents/adk-ralph subprocesses."
+      },
+      "artifacts": [],
+      "status": "skipped",
+      "error": null
+    }
+  ]
+}

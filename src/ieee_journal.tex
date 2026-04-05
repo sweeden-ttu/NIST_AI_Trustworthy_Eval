@@ -1,0 +1,56 @@
+% IEEE-format article derived from coursework experiments (CS 6343-style seed).
+% Section files follow the multi-author layout from:
+% https://github.com/mister-weeden/et-al-Masapeta-Dhakal-Ravula-Zhang (CVPR_1494/sec/* pattern).
+% Build: pdflatex or latexmk from this directory; requires IEEEtran (e.g. texlive-publishers).
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{url}
+\input{review_macros}
+\usepackage{hyperref}
+
+% Figures from scripts/run_coursework_outputs.py (conda env rd-ralph-template)
+\graphicspath{{../output/diagrams/}}
+
+\hypersetup{hidelinks}
+
+\title{Experimental Analysis of AES Diffusion, Block Cipher Modes, and TLS Cipher Suites}
+
+\author{
+\IEEEauthorblockN{Author Name}
+\IEEEauthorblockA{\textit{Department} \\
+\textit{University}\\
+email@domain}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We present an empirical study seeded by structured cryptography coursework, extending assignment questions into reproducible experiments suitable for archival reporting. We measure AES round-by-round avalanche behavior under controlled modifications (ShiftRows and MixColumns variants), compare ECB and CBC mode leakage on structured bitmap data, and summarize TLS cipher suite negotiations from a small browser and website sample. We discuss limitations, reproducibility, and relation to standardization practice.
+\end{abstract}
+
+\begin{IEEEkeywords}
+AES, avalanche effect, block cipher modes, ECB, CBC, TLS, cipher suites, reproducibility
+\end{IEEEkeywords}
+
+% --- Body (same \input order as CVPR_1494/main.tex in the reference template) ---
+\input{sec/0_abstract}
+\input{sec/1_technical_contribution}
+\input{sec/2_experimental_methodology}
+\input{sec/3_results_validation}
+\input{sec/4_literature_review}
+\input{sec/5_presentation_clarity}
+\input{sec/6_detailed_comments}
+\input{sec/7_questions_authors}
+\input{sec/8_minor_issues}
+\input{sec/9_meta_review}
+
+\bibliographystyle{IEEEtran}
+\begin{thebibliography}{1}
+\bibitem{daemen2002design}
+J.~Daemen and V.~Rijmen, \textit{The Design of Rijndael: AES---The Advanced Encryption Standard}. Berlin: Springer, 2002.
+\end{thebibliography}
+
+\end{document}

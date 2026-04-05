@@ -1,0 +1,5 @@
+[
+  "Attempt 1: Questions extraction failed — LM Studio chat/completions HTTP 400 at http://127.0.0.1:1234/v1 (no server or wrong model id).",
+  "Attempt 2: Embedding generation failed — connection refused to http://192.168.0.13:1234/v1/embeddings (LM Studio not reachable from this environment).",
+  "Remediation: Start LM Studio, load chat + embedding models matching CHAT_MODEL and EMBEDDING_MODEL, set LM_STUDIO_BASE_URL, then re-run ResearchGraph or: rd-agent-mcp research-phase --topic \"...\" --homework-pdf homework-assignment.pdf"
+]

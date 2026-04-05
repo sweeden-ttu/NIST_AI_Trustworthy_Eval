@@ -1,0 +1,16 @@
+% Section 2 | Experimental Methodology | Zezheng Zhang
+\section{Experimental Methodology}
+\label{sec:experimental-methodology}
+
+\subsection{Question 1: AES tracing and diffusion metrics}
+We implement or instrument AES-128 with logged intermediate states after AddRoundKey, SubBytes, ShiftRows, MixColumns (round 10 omits MixColumns). Hamming distances (byte and bit) compare nominal versus single-bit plaintext and key perturbations. Ablations disable ShiftRows or replace the MixColumns matrix as specified in the assignment brief.
+
+\subsection{Question 2: ECB versus CBC on bitmap data}
+OpenSSL (or equivalent) encrypts a fixed test image in ECB and CBC with a random 16-byte key and IV. We document visual artifacts, then restore the BMP header from plaintext to observe corrected viewing behavior and interpret mode-dependent structure.
+
+\subsection{Question 3: TLS handshake observation}
+Wireshark captures Client Hello and Server Hello cipher suites for multiple browsers and sites. We classify algorithms (key exchange, authentication, bulk cipher/mode, MAC where applicable) and note TLS~1.3 differences from TLS~1.2 decomposition.
+
+\section{Experimental Setup}
+\label{sec:experimental-setup}
+Experiments are specified under \texttt{test\_cases/} and executed artifacts are written to \texttt{output/results/} and \texttt{output/diagrams/}. Environment versions (OpenSSL, Wireshark, OS) are recorded for reproducibility.

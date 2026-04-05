@@ -1,0 +1,17 @@
+{
+  "research_phase": {
+    "topic": "AES avalanche and TLS cipher suite survey",
+    "papers": [],
+    "homework_pdf": "./homework-assignment.pdf",
+    "topics": ["AES diffusion", "ECB vs CBC", "TLS 1.2 vs 1.3 cipher suites"]
+  },
+  "extract_questions": {
+    "homework_pdf": "./homework-assignment.pdf",
+    "papers": [],
+    "topics": ["block ciphers", "modes of operation", "TLS"]
+  },
+  "run_phase_cli": {
+    "command": "rd-agent-mcp run-phase questions",
+    "note": "Use Typer CLI from rd-agent-mcp package"
+  }
+}

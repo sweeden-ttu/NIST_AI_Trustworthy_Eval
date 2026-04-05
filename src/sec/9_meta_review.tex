@@ -1,0 +1,14 @@
+% Section 9 | Meta-Review \& Integration | Phaninder Reddy Masapeta (Lead)
+\section{Meta-Review and Integration}
+\label{sec:meta-review}
+
+The three tracks (AES instrumentation, modes on structured data, TLS sampling) form a coherent applied-cryptography lab narrative. Together they reinforce standard lessons: rapid diffusion inside AES rounds, structural failure of ECB on repetitive plaintexts, and the diversity of negotiated TLS stacks in the wild.
+
+\strength{Reproducibility is foregrounded: scripts, output paths, and environment assumptions are stated explicitly.}
+
+\section{Reproducibility}
+\label{sec:reproducibility}
+Regenerate metrics, JSON summaries, and PDF figures with:
+\texttt{conda activate rd-ralph-template \&\& python scripts/run\_coursework\_outputs.py} from the repository root (requires OpenSSL and network access for TLS probes). Outputs land in \texttt{output/results/} and \texttt{output/diagrams/} as referenced by \texttt{test\_cases/rd\_agent/}. Key/IV material for Q2 is recorded under \texttt{output/results/q2/openssl\_run.json} for local replay.
+
+For the LangGraph/MCP pipeline, set \texttt{LM\_STUDIO\_BASE\_URL} and enable \texttt{RD\_AGENT\_MCP\_EXEC\_AGENTS=true} only in trusted environments when spawning real \texttt{rd-agent} / \texttt{adk-ralph} subprocesses from \texttt{rd-agent-mcp}.

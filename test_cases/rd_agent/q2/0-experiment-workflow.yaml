@@ -1,0 +1,45 @@
+class: BlockModesExperimentWorkflow
+alg: MultiAgentPipeline
+depth: 1
+
+journal:
+  contribution_claim: Relate visual ECB structure leakage to CBC IV chaining on formatted media.
+  related_work_keywords:
+    - ECB leakage
+    - CBC mode
+    - BMP file format
+  figure_slugs:
+    - q2-ecb-noise
+    - q2-cbc-noise
+    - q2-header-fixed-ecb
+    - q2-header-fixed-cbc
+
+phase: experiment
+
+start_state: asset_baseline
+win_states:
+  - encrypt_ecb_cbc
+  - header_restore
+lose_states: []
+
+successors:
+  asset_baseline:
+    openssl_encrypt: encrypt_ecb_cbc
+  encrypt_ecb_cbc:
+    hex_header_fix: header_restore
+
+criteria:
+  - Random 16-byte key and IV recorded (not committed)
+  - Screenshots / figures for each stage
+  - Written explanation of ECB vs CBC observations
+
+assets:
+  secret_bmp: assets/Secret.bmp
+
+expected_output:
+  artifacts_dir: output/results/q2/
+  note: Place OpenSSL commands and hashes in reproducibility appendix
+
+environment:
+  openssl: Record `openssl version -a` and exact enc subcommands (Q2)
+  platform: macOS/Linux paths; adjust for Windows OpenSSL if needed

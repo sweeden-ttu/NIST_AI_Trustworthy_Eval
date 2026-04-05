@@ -1,0 +1,10 @@
+max_points: 15
+class: AesDiffusionHomeworkQuestion
+passing_threshold: 0.7
+description: >-
+  AES-128 tracing; avalanche across rounds; ablations (no ShiftRows, custom MixColumns);
+  key-bit flip vs plaintext-bit flip. Toy implementation — not production crypto.
+mcp_research_graph:
+  run_id: bbed397b-26a3-44b3-bd90-651f16569473
+  results_json: ../../../output/results/research-graph-latest.json
+  note: Extracted q1/q1a/q1b plus LLM experiment bullets in bundle; agents simulated.

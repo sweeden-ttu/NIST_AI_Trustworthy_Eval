@@ -1,0 +1,4 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We presented a unified, script-driven lab narrative for AES diffusion tracing (S-box, ShiftRows, MixColumns with optional $M_{\mathrm{new}}$, key schedule, and logged states), for visual comparison of ECB and CBC on structured bitmap data, and for coarse TLS negotiation sampling. The toy AES implementation in \texttt{toy\_aes128\_trace.py} is intentionally narrow---single-block, encrypt-only, validated against PyCryptodome for standard options---but it makes round-wise avalanche analysis inspectable. Future extensions include multi-plaintext Hamming statistics, full Wireshark-based cipher-offer tables for two browsers and nine sites, and hardening guidance distinguishing pedagogy from production cryptography.

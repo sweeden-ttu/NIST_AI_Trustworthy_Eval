@@ -1,0 +1,9 @@
+# Article section iteration agents (ieee_journal.tex → src/sec/*.tex)
+kind: article_sections
+description: >-
+  Per-section rd-agent / adk-ralph YAML specs for iterative improvement of LaTeX sections
+  after running scripts/run_coursework_outputs.py. Not a graded homework CONFIG; optional
+  for rd-agent-mcp validate-tests (may ignore unknown roots).
+ieee_driver: src/ieee_journal.tex
+section_glob: src/sec/*.tex
+workflow_doc: test_cases/article_sections/README.md

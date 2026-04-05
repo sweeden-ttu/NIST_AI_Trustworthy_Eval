@@ -1,0 +1,60 @@
+% Final paper driver: includes intro, prelim, method, experiment, conclusion,
+% reproducibility, ethics, bibliography (main.bib → main.bbl via BibTeX), appendix.
+% Local style files natbib.sty / fancyhdr.sty are on the search path (same directory).
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage[round,authoryear]{natbib}
+
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% Coursework figures (run: python scripts/run_coursework_outputs.py) + legacy Figures/
+\graphicspath{{../output/diagrams/}{Figures/}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\nouppercase{\leftmark}}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+\title{AES Diffusion Tracing, Block Cipher Modes, and TLS Negotiation Snapshots:\\
+A Reproducible Lab Pipeline (Toy Implementation)}
+\author{Course report (rd-ralph-template)}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We document an educational pipeline built around a toy AES-128 encrypt-only tracer in Python, OpenSSL-based ECB/CBC visualization on bitmap data, and OpenSSL \texttt{s\_client} negotiation snapshots for a small set of public hosts. The main text includes a \textbf{primer} on bits, XOR, block ciphers, and the finite field $\mathrm{GF}(2^8)$ (\texttt{xtime}, MixColumns) for readers with no cryptography background, then maps each idea to \texttt{toy\_aes128\_trace.py}. The tracer implements the standard S-box, \texttt{xtime}-based MixColumns, ShiftRows (optional ablation), an alternate MixColumns matrix $M_{\mathrm{new}}$, and key expansion, with per-step state logging for Hamming-distance diffusion curves. Results are reproducible via \texttt{scripts/run\_coursework\_outputs.py} and align with a homework-style research pipeline (questions $\rightarrow$ experiments $\rightarrow$ artifacts); the code is not intended for production side-channel resistance.
+\end{abstract}
+
+\input{intro_zyf}
+\input{prelim}
+\input{method_zyf}
+\input{experiment}
+
+\section{Related Work}
+\label{sec:related_work}
+The Advanced Encryption Standard (AES) and Rijndael's design rationale are treated comprehensively by \citet{daemen2002design}; FIPS-197 specifies the standard \citep{nist2001aes}. Modes of operation including CBC and ECB are catalogued by NIST SP~800-38A \citep{dworkin2007sp800-38a}. TLS~1.2 framing is standardized in RFC~5246 \citep{rfc5246}. Appendix~\ref{app:implementation} summarizes implementation constants tied to our codebase.
+
+\input{conclusion}
+
+\newpage
+\input{reproducibility}
+\input{ethics}
+
+% Bibliography: edit main.bib, then run bibtex main (from this directory).
+\bibliographystyle{plainnat}
+\bibliography{main}
+
+\newpage
+\appendix
+\input{appendix}
+
+\end{document}

@@ -1,0 +1,9 @@
+# Critique agent: review output/results/latex-sections*.json vs coursework JSON
+kind: latex_sections_critique
+description: >-
+  rd-agent task that grades each LaTeX section fragment, validates claims against
+  output/results/q1-summary.json, output/results/q2/*.json, output/results/q3-cipher-summary.json,
+  and checks results/discussion/conclusion consistency. Optional pre-step:
+  python scripts/critique_latex_sections_stub.py
+workflow_doc: test_cases/latex_sections_critique/README.md
+inputs_glob: output/results/latex-sections*.json

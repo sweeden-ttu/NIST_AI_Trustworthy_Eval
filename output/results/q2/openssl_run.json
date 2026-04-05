@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-04-05T00:46:54.552018+00:00",
+  "openssl_commands": [
+    "openssl enc -aes-128-ecb -nosalt -K <hex> -in Secret.bmp -out secret.ecb.bin",
+    "openssl enc -aes-128-cbc -nosalt -K <hex> -iv <hex> -in Secret.bmp -out secret.cbc.bin"
+  ],
+  "key_hex": "3ede64d8ef3b335a395de46f14c4012a",
+  "iv_hex": "71988b5602ea686f4b5771c101af37e6",
+  "note": "Key/IV shown for reproducibility on this workstation; do not commit if policy forbids.",
+  "artifacts": {
+    "ecb_ciphertext": "output/results/q2/secret.ecb.bin",
+    "cbc_ciphertext": "output/results/q2/secret.cbc.bin",
+    "header_fixed_ecb": "output/results/q2/secret.ecb.header-fixed.bmp",
+    "header_fixed_cbc": "output/results/q2/secret.cbc.header-fixed.bmp"
+  }
+}

@@ -1,0 +1,154 @@
+name: Research Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      phase:
+        type: choice
+        options:
+          - questions
+          - experiment
+          - embeddings
+          - agent
+          - results
+          - full
+        description: Phase to run
+        required: true
+        default: full
+      question:
+        type: choice
+        options:
+          - all
+          - q1
+          - q2
+          - q3
+        description: Question to process
+        required: false
+        default: all
+      provider:
+        type: choice
+        options:
+          - auto
+          - openai
+          - anthropic
+          - google
+        description: LLM provider to use
+        required: false
+        default: auto
+
+env:
+  DEFAULT_CHAT_MODEL: gpt-4o
+  DEFAULT_EMBEDDING_MODEL: text-embedding-3-small
+
+jobs:
+  research-phase:
+    runs-on: ubuntu-latest
+    outputs:
+      phase: ${{ inputs.phase }}
+      question: ${{ inputs.question }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+
+      - name: Install dependencies
+        run: pip install rd-agent-mcp
+        env:
+          pip_cache_dir: ~/.cache/pip
+
+      - name: Run Phase
+        env:
+          RD_AGENT_PATH: ${{ github.workspace }}/agents/rd-agent
+          ADK_RALPH_PATH: ${{ github.workspace }}/agents/adk-ralph
+          RD_AGENT_MCP_EXEC_AGENTS: "false"
+          CHAT_MODEL: ${{ inputs.provider == 'auto' && 'gpt-4o' || inputs.provider }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.phase }}" == "full" ]; then
+            rd-agent-mcp research-phase \
+              --topic "Research on Agentic Workflows" \
+              --papers "https://arxiv.org/abs/2505.14738"
+          else
+            rd-agent-mcp run-phase ${{ inputs.phase }} --question ${{ inputs.question }}
+          fi
+
+      - name: Commit Results
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          if git diff --quiet; then
+            echo "No changes to commit"
+          else
+            git add -A
+            git commit -m "Phase ${{ inputs.phase }}: ${{ inputs.question }} - $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            git push || echo "Push failed, continuing..."
+          fi
+
+      - name: Upload Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase-results-${{ inputs.phase }}-${{ inputs.question }}
+          path: |
+            output/
+            test_cases/
+          retention-days: 30
+
+  test-phase:
+    needs: research-phase
+    runs-on: ubuntu-latest
+    if: ${{ inputs.phase != 'full' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Results
+        uses: actions/download-artifact@v4
+        with:
+          name: phase-results-${{ inputs.phase }}-${{ inputs.question }}
+          path: output/
+
+      - name: Run Test Cases
+        run: |
+          if [ -d "test_cases" ]; then
+            python -m rd_agent_mcp.test_runner \
+              --test-dir test_cases \
+              --question ${{ inputs.question }} \
+              --output output/test-results/
+          fi
+
+      - name: Validate Results
+        run: |
+          if [ -f "output/results.json" ]; then
+            echo "Results JSON validated"
+            python -c "import json; json.load(open('output/results.json'))"
+          fi
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results-${{ inputs.phase }}-${{ inputs.question }}
+          path: output/test-results/
+          retention-days: 7

@@ -1,0 +1,10 @@
+max_points: 8
+class: TlsCipherSuitesHomeworkQuestion
+passing_threshold: 0.7
+description: >-
+  Wireshark Client Hello / Server Hello; classify suites; TLS 1.3 vs 1.2; multi-browser
+  and multi-site sample; summarize common algorithms.
+mcp_research_graph:
+  run_id: bbed397b-26a3-44b3-bd90-651f16569473
+  results_json: ../../../output/results/research-graph-latest.json
+  note: Bundle TLS cipher experiment text is supplementary; satisfy homework sample sizes in workflow YAML.

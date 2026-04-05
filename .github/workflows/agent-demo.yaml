@@ -1,0 +1,103 @@
+name: Agent Demo
+
+on:
+  workflow_dispatch:
+    inputs:
+      question:
+        type: choice
+        options:
+          - q1
+          - q2
+          - q3
+        description: Question to demo
+        required: true
+        default: q1
+
+env:
+  CHAT_MODEL: gpt-4o
+  EMBEDDING_MODEL: text-embedding-3-small
+
+jobs:
+  python-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install rd-agent-mcp
+
+      - name: Run Python Analysis
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python examples/python/generate_results.py --question ${{ inputs.question }}
+
+      - name: Upload Python Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-results-${{ inputs.question }}
+          path: output/results.json
+
+  rust-demo:
+    runs-on: ubuntu-latest
+    if: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build Rust Tool
+        run: |
+          cd examples/rust
+          cargo build --release
+
+      - name: Run Rust Analysis
+        run: |
+          cd examples/rust
+          ./target/release/analyze_stats --input ../output/results.json
+
+      - name: Upload Rust Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: rust-results-${{ inputs.question }}
+          path: output/rust_output.json
+
+  latex-demo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up LaTeX
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: src
+          args: -pdf -interaction=nonstopmode
+
+      - name: Generate LaTeX Table
+        run: |
+          rd-agent-mcp compile-results \
+            --input output/results.json \
+            --output output/tables/
+
+      - name: Upload LaTeX Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: latex-results-${{ inputs.question }}
+          path: |
+            src/main.pdf
+            output/tables/

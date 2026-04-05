@@ -1,0 +1,97 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{dworkin2007sp800-38a}
+\citation{rfc5246}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Who this is for.}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why trace a toy cipher?}{1}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What this document covers.}{1}{section*.3}\protected@file@percent }
+\citation{daemen2002design}
+\@writefile{toc}{\contentsline {paragraph}{Reproducibility.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Preliminaries: cryptography from zero}{2}{section.2}\protected@file@percent }
+\newlabel{sec:prelim}{{2}{2}{Preliminaries: cryptography from zero}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Secret writing without jargon}{2}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Bits, bytes, and XOR}{2}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Confusion and diffusion (intuition only)}{2}{subsection.2.3}\protected@file@percent }
+\citation{daemen2002design}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Polynomials with coefficients in $\{0,1\}$}{3}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}The field $\mathrm  {GF}(2^8)$ in one page}{3}{subsection.2.5}\protected@file@percent }
+\newlabel{sec:prelim-gf}{{2.5}{3}{The field $\mathrm {GF}(2^8)$ in one page}{subsection.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}The \texttt  {xtime} operation (multiply by $x$)}{3}{subsection.2.6}\protected@file@percent }
+\newlabel{sec:prelim-xtime}{{2.6}{3}{The \texttt {xtime} operation (multiply by $x$)}{subsection.2.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}AES state layout}{3}{subsection.2.7}\protected@file@percent }
+\citation{dworkin2007sp800-38a}
+\citation{nist2001aes}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.8}SubBytes and the S-box}{4}{subsection.2.8}\protected@file@percent }
+\newlabel{sec:prelim-sbox}{{2.8}{4}{SubBytes and the S-box}{subsection.2.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.9}ShiftRows and MixColumns}{4}{subsection.2.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.10}Key schedule and AddRoundKey}{4}{subsection.2.10}\protected@file@percent }
+\newlabel{sec:prelim-rounds}{{2.10}{4}{Key schedule and AddRoundKey}{subsection.2.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.11}Modes (ECB vs.\ CBC)}{4}{subsection.2.11}\protected@file@percent }
+\newlabel{sec:prelim-modes}{{2.11}{4}{Modes (ECB vs.\ CBC)}{subsection.2.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.12}Hamming distance on traces}{4}{subsection.2.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.13}Pipeline-aligned checklist (concepts $\leftrightarrow $ code)}{4}{subsection.2.13}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Concepts needed for the toy AES implementation and where they appear.}}{5}{table.1}\protected@file@percent }
+\newlabel{tab:concept-map}{{1}{5}{Concepts needed for the toy AES implementation and where they appear}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methodology: \texttt  {toy\_aes128\_trace.py}}{5}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{5}{Methodology: \texttt {toy\_aes128\_trace.py}}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}How this section follows the research pipeline}{5}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:method-pipeline}{{3.1}{5}{How this section follows the research pipeline}{subsection.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Homework-style pipeline stages and the supporting implementation.}}{5}{table.2}\protected@file@percent }
+\newlabel{tab:pipeline-map}{{2}{5}{Homework-style pipeline stages and the supporting implementation}{table.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Constants and field arithmetic}{5}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}MixColumns and $M_{\mathrm  {new}}$}{5}{subsection.3.3}\protected@file@percent }
+\citation{dworkin2007sp800-38a}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Key expansion}{6}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Round function and logging}{6}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}Hamming analysis}{6}{subsection.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}External validation}{6}{subsection.3.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Experiments}{6}{section.4}\protected@file@percent }
+\newlabel{sec:experiments}{{4}{6}{Experiments}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Question 1: Toy AES Hamming traces}{6}{subsection.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Bit Hamming distance vs.\ trace step index: baseline (ShiftRows and standard MixColumns).}}{7}{figure.1}\protected@file@percent }
+\newlabel{fig:q1-base}{{1}{7}{Bit Hamming distance vs.\ trace step index: baseline (ShiftRows and standard MixColumns)}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Same metric with ShiftRows disabled (diffusion typically slows).}}{7}{figure.2}\protected@file@percent }
+\newlabel{fig:q1-sr-off}{{2}{7}{Same metric with ShiftRows disabled (diffusion typically slows)}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Same metric with alternate \texttt  {M\_NEW} MixColumns matrix.}}{8}{figure.3}\protected@file@percent }
+\newlabel{fig:q1-mnew}{{3}{8}{Same metric with alternate \texttt {M\_NEW} MixColumns matrix}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Question 2: ECB vs.\ CBC on BMP data}{8}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Ciphertext-body previews: ECB (left) vs.\ CBC (right).}}{8}{figure.4}\protected@file@percent }
+\newlabel{fig:q2-noise}{{4}{8}{Ciphertext-body previews: ECB (left) vs.\ CBC (right)}{figure.4}{}}
+\citation{daemen2002design}
+\citation{nist2001aes}
+\citation{dworkin2007sp800-38a}
+\citation{rfc5246}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Plaintext BMP header spliced onto ciphertext: ECB (left) vs.\ CBC (right).}}{9}{figure.5}\protected@file@percent }
+\newlabel{fig:q2-fix}{{5}{9}{Plaintext BMP header spliced onto ciphertext: ECB (left) vs.\ CBC (right)}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Question 3: TLS negotiation snapshot}{9}{subsection.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Negotiated parameters from \texttt  {s\_client} (openssl snapshot, not full ClientHello offer lists).}}{9}{figure.6}\protected@file@percent }
+\newlabel{fig:q3-table}{{6}{9}{Negotiated parameters from \texttt {s\_client} (openssl snapshot, not full ClientHello offer lists)}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Template example metrics (Python demo)}{9}{subsection.4.4}\protected@file@percent }
+\newlabel{sec:experiments-performance}{{4.4}{9}{Template example metrics (Python demo)}{subsection.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Frequency of server-selected cipher strings in the nine-host sample.}}{10}{figure.7}\protected@file@percent }
+\newlabel{fig:q3-bar}{{7}{10}{Frequency of server-selected cipher strings in the nine-host sample}{figure.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Related Work}{10}{section.5}\protected@file@percent }
+\newlabel{sec:related_work}{{5}{10}{Related Work}{section.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{10}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{10}{Conclusion}{section.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Illustrative metrics panels from the demo \texttt  {generate\_results}/\texttt  {plot\_diagram} pipeline (synthetic scores).}}{11}{figure.8}\protected@file@percent }
+\newlabel{fig:performance-demo}{{8}{11}{Illustrative metrics panels from the demo \texttt {generate\_results}/\texttt {plot\_diagram} pipeline (synthetic scores)}{figure.8}{}}
+\bibstyle{plainnat}
+\bibdata{main}
+\bibcite{daemen2002design}{{1}{2002}{{Daemen and Rijmen}}{{}}}
+\bibcite{rfc5246}{{2}{2008}{{Dierks and Rescorla}}{{}}}
+\bibcite{dworkin2007sp800-38a}{{3}{2001}{{Dworkin}}{{}}}
+\bibcite{nist2001aes}{{4}{2001}{{NIST}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Implementation constants and trace labels}{13}{appendix.A}\protected@file@percent }
+\newlabel{app:implementation}{{A}{13}{Implementation constants and trace labels}{appendix.A}{}}
+\@writefile{toc}{\contentsline {paragraph}{S-box.}{13}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\texttt  {xtime} and MixColumns.}{13}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Alternate matrix $M_{\mathrm  {new}}$.}{13}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Logged step order.}{13}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}LLM usage (writing assistance)}{13}{appendix.B}\protected@file@percent }
+\newlabel{app:llm}{{B}{13}{LLM usage (writing assistance)}{appendix.B}{}}
+\gdef \@abspage@last{13}

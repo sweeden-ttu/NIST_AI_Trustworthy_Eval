@@ -1,0 +1,236 @@
+name: Build LaTeX PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**.tex'
+      - 'src/**.bib'
+      - 'src/**.sty'
+      - '.github/workflows/build-pdf.yaml'
+  pull_request:
+    paths:
+      - 'src/**.tex'
+      - 'src/**.bib'
+      - 'src/**.sty'
+      - '.github/workflows/build-pdf.yaml'
+  workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Enable debug mode'
+        required: false
+        default: false
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changes: ${{ steps.changes.outputs.changes }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Debug - List directory structure
+        if: ${{ inputs.debug_enabled }}
+        run: |
+          echo "Repository structure:"
+          find . -type f \( -name "*.tex" -o -name "*.bib" -o -name "*.sty" -o -name "*.cls" \) | head -30
+          echo ""
+          echo "src directory contents:"
+          ls -la src/ || echo "src directory not found"
+
+      - name: Calculate version
+        id: version
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $LATEST_TAG"
+          
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+          MAJOR=${VERSION_PARTS[0]:-0}
+          MINOR=${VERSION_PARTS[1]:-0}
+          PATCH=${VERSION_PARTS[2]:-0}
+          
+          PATCH=$((PATCH + 1))
+          NEW_VERSION="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "New version: $NEW_VERSION"
+          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Generate change summary
+        id: changes
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            COMMITS=$(git log --oneline --since="7 days ago" | head -10)
+          else
+            COMMITS=$(git log --oneline ${LATEST_TAG}..HEAD)
+          fi
+          
+          CHANGES="## Changes in this release\n\n"
+          CHANGES="${CHANGES}### Build Information\n"
+          CHANGES="${CHANGES}- Build Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')\n"
+          CHANGES="${CHANGES}- Commit SHA: ${{ github.sha }}\n"
+          
+          echo "changes<<EOF" >> $GITHUB_OUTPUT
+          echo -e "$CHANGES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pygments
+        run: pip install pygments
+
+      - name: Set up LaTeX environment
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: src
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+          latexmk_use_lualatex: false
+          pre_compile: |
+            echo "Installing essential LaTeX packages..."
+            tlmgr update --self
+            
+            safe_install() {
+              local package=$1
+              echo "Checking $package..."
+              if tlmgr info "$package" >/dev/null 2>&1; then
+                if ! tlmgr info --only-installed "$package" >/dev/null 2>&1; then
+                  echo "Installing $package..."
+                  tlmgr install "$package" || echo "Failed to install $package, continuing..."
+                else
+                  echo "$package already installed"
+                fi
+              else
+                echo "Package $package not found, skipping..."
+              fi
+            }
+            
+            # Core packages for research papers
+            safe_install collection-latex
+            safe_install collection-fontsrecommended
+            
+            # Bibliography and citations
+            safe_install natbib
+            safe_install cleveref
+            
+            # Typography
+            safe_install soul
+            safe_install microtype
+            safe_install enumitem
+            
+            # Tables and figures
+            safe_install booktabs
+            safe_install caption
+            safe_install subcaption
+            safe_install graphicx
+            safe_install float
+            
+            # Math
+            safe_install amsmath
+            safe_install amsfonts
+            safe_install amssymb
+            safe_install mathtools
+            
+            # Code listings
+            safe_install listings
+            safe_install minted
+            
+            # Algorithms
+            safe_install algorithm2e
+            safe_install algorithmicx
+            
+            # TikZ for diagrams
+            safe_install tikz
+            safe_install pgfplots
+            
+            # Colors
+            safe_install xcolor
+            safe_install soul
+            
+            # Hyperlinks
+            safe_install hyperref
+            safe_install url
+            
+            # Additional utilities
+            safe_install etoolbox
+            safe_install trimspaces
+            
+            echo "LaTeX package setup completed"
+
+      - name: Verify PDF creation
+        run: |
+          if [ -f "src/main.pdf" ]; then
+            echo "PDF successfully created"
+            ls -la src/main.pdf
+            cp src/main.pdf src/paper-${{ steps.version.outputs.version }}.pdf
+          else
+            echo "PDF not found"
+            ls -la src/
+            exit 1
+          fi
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper-pdf-${{ steps.version.outputs.version }}
+          path: |
+            src/main.pdf
+            src/paper-${{ steps.version.outputs.version }}.pdf
+          retention-days: 90
+
+      - name: Upload build logs (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs-${{ github.run_number }}
+          path: |
+            src/*.log
+            src/*.aux
+            src/*.blg
+          retention-days: 7
+
+  create-release:
+    needs: build-pdf
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download PDF artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: paper-pdf-${{ needs.build-pdf.outputs.version }}
+          path: ./release-assets
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.build-pdf.outputs.version }}
+          name: "Paper ${{ needs.build-pdf.outputs.version }}"
+          body: ${{ needs.build-pdf.outputs.changes }}
+          files: |
+            ./release-assets/main.pdf
+            ./release-assets/paper-${{ needs.build-pdf.outputs.version }}.pdf
+          draft: false
+          prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fail_on_unmatched_files: false

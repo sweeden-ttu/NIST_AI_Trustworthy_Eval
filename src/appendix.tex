@@ -1,0 +1,30 @@
+% Appendix (replaces legacy MLE-agent material). Keeps natbib citations consistent with main body.
+
+\section{Implementation constants and trace labels}
+\label{app:implementation}
+
+\paragraph{S-box.}
+The byte array \texttt{SBOX} in \texttt{toy\_aes128\_trace.py} matches the AES specification; SubBytes applies it to each state byte.
+
+\paragraph{\texttt{xtime} and MixColumns.}
+\texttt{xtime} realizes multiplication by $x$ in $\mathrm{GF}(2^8)$ with AES modulus. Default MixColumns uses coefficients $2$ and $3$ via \texttt{xtime} and XOR. Generic coefficient multiplication uses a double-and-add style loop for other integers.
+
+\paragraph{Alternate matrix $M_{\mathrm{new}}$.}
+Coursework Part~C uses \texttt{M\_NEW}:
+\[
+M_{\mathrm{new}}=
+\begin{pmatrix}
+3&2&1&1\\
+1&3&2&1\\
+1&1&3&2\\
+2&1&1&3
+\end{pmatrix}
+\]
+(row/column convention matches \texttt{mix\_single\_column} in code).
+
+\paragraph{Logged step order.}
+For each round, \texttt{encrypt\_trace} emits states after SubBytes, ShiftRows (if enabled), MixColumns (rounds $1\ldots9$ only), and AddRoundKey, enabling paired Hamming curves from \texttt{collect\_hamming\_curve}.
+
+\section{LLM usage (writing assistance)}
+\label{app:llm}
+If applicable: LLMs may be used only for language editing; core technical content derives from the cited standards and the referenced repository scripts.

@@ -1,0 +1,53 @@
+\section{Methodology: \texttt{toy\_aes128\_trace.py}}
+\label{sec:method}
+
+This section maps the Python module to Section~\ref{sec:prelim}. Read them together: preliminaries give the \textbf{vocabulary}; here we show \textbf{which function implements which idea}. The module is \textbf{encrypt-only}, \textbf{single-block}, and for \textbf{education}; it mirrors AES-128 in FIPS-197 \citep{nist2001aes}.
+
+\subsection{How this section follows the research pipeline}
+\label{sec:method-pipeline}
+A typical \texttt{rd-agent-mcp} workflow first \textbf{extracts questions} from the homework brief, then \textbf{designs experiments} (what to measure, what to ablate), then \textbf{materializes artifacts} (JSON, PDFs). Table~\ref{tab:pipeline-map} shows how code sections answer those stages for the toy cipher.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Homework-style pipeline stages and the supporting implementation.}
+  \label{tab:pipeline-map}
+  \begin{tabular}{p{0.22\linewidth}p{0.72\linewidth}}
+    \toprule
+    \textbf{Stage} & \textbf{Implementation / output} \\
+    \midrule
+    Clarify Q1 (diffusion, rounds) & \texttt{encrypt\_trace} logging + \texttt{collect\_hamming\_curve} $\rightarrow$ \texttt{q1-summary.json}, Hamming PDFs \\
+    Ablate ShiftRows / MixColumns & \texttt{TraceOpts(disable\_shift\_rows=True)}, \texttt{TraceOpts(mix\_matrix=M\_NEW)} \\
+    Key vs.\ plaintext flip & Two runs of \texttt{collect\_hamming\_curve} with $(P,P')$ or $(K,K')$ pairs \\
+    Sanity check & \texttt{verify\_aes\_against\_pycryptodome} in \texttt{run\_coursework\_outputs.py} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Constants and field arithmetic}
+The global \texttt{SBOX} is the AES substitution table (Section~\ref{sec:prelim-sbox}). The function \texttt{xtime($a$)} is multiplication by $x$ in $\mathrm{GF}(2^8)$ mod $m(x)=x^8+x^4+x^3+x+1$ (Section~\ref{sec:prelim-xtime}); every MixColumns coefficient in $\{2,3\}$ is built from \texttt{xtime} and XOR.
+
+\subsection{MixColumns and $M_{\mathrm{new}}$}
+\texttt{mix\_single\_column} multiplies one column by a $4\times 4$ matrix over $\mathrm{GF}(2^8)$. The default matrix is the AES circulant with coefficients $\{2,3,1,1\}$. For coursework Part~C, \texttt{TraceOpts.mix\_matrix} can point to \texttt{M\_NEW}:
+\[
+\begin{bmatrix}3&2&1&1\\1&3&2&1\\1&1&3&2\\2&1&1&3\end{bmatrix}
+\]
+so you can \textbf{compare diffusion curves} when linear mixing changes but ShiftRows and the rest remain.
+
+\subsection{Key expansion}
+\texttt{key\_expansion} implements AES-128 ($N_k=4$, $N_r=10$). \texttt{sub\_word} applies \texttt{SBOX} to four bytes; \texttt{rot\_word} rotates a 32-bit word; \texttt{rcon} supplies round constants XORed into the schedule. Output: eleven round keys \texttt{rk[0..10]} (Section~\ref{sec:prelim-rounds}).
+
+\subsection{Round function and logging}
+\texttt{encrypt\_trace(plaintext, key, opts, log)} encrypts one block. If \texttt{log} is provided, it receives \texttt{(label, round, state\_bytes)} after:
+\begin{itemize}
+  \item initial AddRoundKey (\texttt{r0\_add\_round\_key});
+  \item for rounds $1\ldots9$: SubBytes, ShiftRows (unless \texttt{opts.disable\_shift\_rows}), MixColumns (using \texttt{opts.mix\_matrix} if set), AddRoundKey;
+  \item round~10: SubBytes, ShiftRows (optional skip), AddRoundKey (no MixColumns).
+\end{itemize}
+State layout is \texttt{s[col][row]} (column-major), matching Section~\ref{sec:prelim}.
+
+\subsection{Hamming analysis}
+\texttt{hamming\_bits} / \texttt{hamming\_bytes} compare two 16-byte states. \texttt{collect\_hamming\_curve} encrypts twice, collects two aligned lists of intermediate states, and returns per-step bit distances---the data behind the Q1 figures.
+
+\subsection{External validation}
+\texttt{run\_coursework\_outputs.py} calls \texttt{verify\_aes\_against\_pycryptodome}: under default options, ciphertext must match PyCryptodome AES-ECB for one block. This validates functional agreement with a reference, \textbf{not} resistance to timing or power analysis.

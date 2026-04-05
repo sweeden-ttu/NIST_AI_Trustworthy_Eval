@@ -1,0 +1,115 @@
+\section{Preliminaries: cryptography from zero}
+\label{sec:prelim}
+
+This section explains the \textbf{minimum concepts} needed to read \texttt{toy\_aes128\_trace.py} and the experiments, in the order a reader typically needs them. It aligns with the \textbf{learning goals} surfaced when the homework is decomposed into questions about (i)~round-wise diffusion, (ii)~modes on real file data, and (iii)~TLS cipher suites.
+
+\subsection{Secret writing without jargon}
+\textbf{Encryption} turns a \textbf{plaintext} message into a \textbf{ciphertext} that should look random to anyone who does not know the \textbf{key}. \textbf{Decryption} recovers the plaintext with the correct key. A \textbf{symmetric} cipher uses one shared secret key for both directions (unlike public-key systems, which we do not use here).
+
+A \textbf{block cipher} acts on a \textbf{fixed-size chunk} of data at a time. AES-128 uses 128-bit blocks = \textbf{16 bytes}. Longer messages are handled by a \textbf{mode of operation} (Section~\ref{sec:prelim-modes}), which repeatedly invokes the block cipher.
+
+\subsection{Bits, bytes, and XOR}
+A \textbf{byte} is eight bits, often written in hexadecimal (e.g.\ \texttt{0x01}--\texttt{0xFF}). Computers store AES state as bytes.
+
+\textbf{XOR} (exclusive OR), written $\oplus$ in equations and \texttt{\^} in Python for integers, combines two bits: the result is \texttt{1} if the bits differ. For bytes, XOR is applied bit by bit. Important properties: $a\oplus a=0$, and $a\oplus b\oplus b=a$. AES uses XOR heavily (\textbf{AddRoundKey} XORs a round key into the state). If you are new to XOR, think: ``flip bits where the key has a~\texttt{1}.''
+
+\subsection{Confusion and diffusion (intuition only)}
+Shannon's informal goals still guide block cipher design \citep{daemen2002design}:
+\begin{itemize}
+  \item \textbf{Confusion}: the ciphertext should depend on the key in a complicated way so that changing one key bit changes the output in a hard-to-predict pattern. Nonlinear \textbf{substitution} (the S-box) provides confusion.
+  \item \textbf{Diffusion}: changing one input bit should \textbf{spread} influence across many output bits quickly. \textbf{Permutation} (ShiftRows) and \textbf{linear mixing} (MixColumns) spread information across bytes.
+\end{itemize}
+Our Hamming-distance plots (Section~\ref{sec:experiments}) are a \textbf{quantitative} view of diffusion: after how many steps do almost all 128 bits differ between two close inputs?
+
+\subsection{Polynomials with coefficients in $\{0,1\}$}
+Before finite fields, recall \textbf{polynomials} where each coefficient is only $0$ or $1$, and arithmetic on coefficients is mod~$2$ (so $1+1=0$). For example,
+\[
+(x^3 + 1)(x^2 + x) = x^5 + x^4 + x^3 + x
+\]
+with every coefficient reduced mod~$2$. This is the world of $\mathrm{GF}(2)[x]$.
+
+\subsection{The field $\mathrm{GF}(2^8)$ in one page}
+\label{sec:prelim-gf}
+
+\textbf{What problem does it solve?} MixColumns must \textbf{multiply bytes} by small constants ($1,2,3$) in a way that is \textbf{invertible} (so decryption exists) and \textbf{algebraically clean} (so proofs and attacks are structured). Ordinary integer multiplication mod~$256$ is not the right structure; AES uses a \textbf{finite field} with exactly $256$ elements, written $\mathrm{GF}(2^8)$ or $\mathbb{F}_{2^8}$.
+
+\textbf{Elements = bytes.} Fix an irreducible polynomial $m(x)$ of degree~$8$ over $\mathrm{GF}(2)$. AES standardizes
+\[
+m(x)=x^8+x^4+x^3+x+1
+\]
+(the ``Rijndael polynomial''). Every field element is represented uniquely as a polynomial of degree $<8$, hence \textbf{8 coefficients} $\Rightarrow$ \textbf{one byte}. The byte value is the integer whose bits are those coefficients (e.g.\ $x^7+x^3+x$ corresponds to a specific 8-bit pattern).
+
+\textbf{Addition in $\mathrm{GF}(2^8)$.} Adding two field elements is \textbf{XOR of the two bytes}. This is the same as adding polynomials with coefficients mod~$2$. In code, every time we ``XOR state with key,'' we are adding in the field \emph{and} XOR-ing bits.
+
+\textbf{Multiplication in $\mathrm{GF}(2^8)$.} Multiply two polynomials, then take the remainder when dividing by $m(x)$. This keeps the result inside one byte. General multiplication is implemented with bit shifts and XORs (``Russian peasant'' or similar); our tracer only needs a special case.
+
+\subsection{The \texttt{xtime} operation (multiply by $x$)}
+\label{sec:prelim-xtime}
+In polynomial language, $x$ denotes the monomial $x^1$. Multiplying a field element $a(x)$ by $x$, then reducing mod $m(x)$, is exactly what the Python function \texttt{xtime} computes on the 8-bit value~$a$:
+\begin{itemize}
+  \item If the high bit of $a$ is \texttt{0}, left-shift by one (multiply by $x$ with no wrap).
+  \item If the high bit is \texttt{1}, left-shift and XOR with \texttt{0x1B} (the bit pattern of $m(x)$ minus $x^8$), which performs the reduction mod $m(x)$.
+\end{itemize}
+MixColumns builds products by $2$ and $3$ from \texttt{xtime}:
+\[
+2\cdot a := \texttt{xtime}(a),\qquad 3\cdot a := \texttt{xtime}(a)\oplus a,
+\]
+and uses $1\cdot a = a$. That is why the tracer never needs a general multiply routine for the default matrix.
+
+\subsection{AES state layout}
+AES operates on a $4\times 4$ array of bytes (16 bytes total), indexed in \textbf{column-major} order in our code: \texttt{s[col][row]}. A \textbf{round} applies a fixed sequence of transformations to this grid.
+
+\subsection{SubBytes and the S-box}
+\label{sec:prelim-sbox}
+\textbf{SubBytes} replaces each byte by another byte using a public lookup table, the \textbf{S-box} (\texttt{SBOX} in code). The standard table is bijective (invertible) and highly nonlinear; its algebraic structure is related to inversion in $\mathrm{GF}(2^8)$ followed by an affine map \citep{daemen2002design}. For this lab you only need: \textbf{nonlinear substitution breaks simple linear patterns} and contributes to confusion.
+
+\subsection{ShiftRows and MixColumns}
+\textbf{ShiftRows} rotates rows of the state grid so bytes move to different columns---cheap \textbf{permutation} for diffusion across columns.
+
+\textbf{MixColumns} treats each column as a four-tuple of field elements and multiplies it by a fixed $4\times 4$ matrix over $\mathrm{GF}(2^8)$. Entries are only $1,2,3$, implemented with XOR and \texttt{xtime}. The matrix is chosen so that changing one input byte affects all four output bytes (\textbf{branching}). Our coursework allows replacing this matrix by $M_{\mathrm{new}}$ (\texttt{M\_NEW}) to see how diffusion curves change.
+
+\subsection{Key schedule and AddRoundKey}
+\label{sec:prelim-rounds}
+The 128-bit key is expanded into \textbf{eleven} 128-bit \textbf{round keys} \texttt{rk[0]..rk[10]} (\texttt{key\_expansion} uses the S-box and XORs with round constants \texttt{rcon}). \textbf{AddRoundKey} XORs one round key into the entire state.
+
+\textbf{Round structure (encrypt):}
+\begin{itemize}
+  \item \textbf{Round 0:} AddRoundKey only.
+  \item \textbf{Rounds 1--9:} SubBytes $\rightarrow$ ShiftRows $\rightarrow$ MixColumns $\rightarrow$ AddRoundKey.
+  \item \textbf{Round 10:} SubBytes $\rightarrow$ ShiftRows $\rightarrow$ AddRoundKey (no MixColumns).
+\end{itemize}
+The tracer \texttt{encrypt\_trace} follows this order and can \textbf{skip ShiftRows} or swap MixColumns to \texttt{M\_NEW} for assigned ablations.
+
+\subsection{Modes (ECB vs.\ CBC)}
+\label{sec:prelim-modes}
+The block cipher only defines $E_K(\cdot)$ on 16 bytes. To encrypt a long file, a \textbf{mode} chains blocks.
+
+\textbf{ECB} encrypts each block separately. Equal plaintext blocks $\Rightarrow$ equal ciphertext blocks, so \textbf{patterns survive}---visibly for uncompressed images \citep{dworkin2007sp800-38a}.
+
+\textbf{CBC} XORs each plaintext block with the \textbf{previous ciphertext block} before encrypting; the first block uses a public \textbf{initialization vector (IV)}. Identical plaintext blocks at different positions usually yield different ciphertext blocks, hiding trivial repetition.
+
+\subsection{Hamming distance on traces}
+We run the tracer twice with slightly different plaintext or key, logging the 16-byte state after the same sequence of steps. The \textbf{bit Hamming distance} counts differing bits between aligned states. A steep rise means \textbf{avalanche}: small input changes explode into large output differences---the empirical signature of good diffusion.
+
+\subsection{Pipeline-aligned checklist (concepts $\leftrightarrow$ code)}
+Table~\ref{tab:concept-map} summarizes what to understand for each part of the repository.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Concepts needed for the toy AES implementation and where they appear.}
+  \label{tab:concept-map}
+  \begin{tabular}{p{0.28\linewidth}p{0.62\linewidth}}
+    \toprule
+    \textbf{Idea} & \textbf{Where to look} \\
+    \midrule
+    Byte / XOR / block & \texttt{encrypt\_trace}, \texttt{\_add\_round\_key} \\
+    $\mathrm{GF}(2^8)$, \texttt{xtime}, $\times 2$, $\times 3$ & \texttt{xtime}, \texttt{mix\_single\_column} \\
+    S-box / SubBytes & \texttt{SBOX}, \texttt{\_sub\_bytes} \\
+    ShiftRows & \texttt{\_shift\_rows}, option \texttt{disable\_shift\_rows} \\
+    MixColumns / $M_{\mathrm{new}}$ & \texttt{mix\_single\_column}, \texttt{M\_NEW}, \texttt{TraceOpts.mix\_matrix} \\
+    Key schedule & \texttt{key\_expansion}, \texttt{sub\_word}, \texttt{rot\_word}, \texttt{rcon} \\
+    Diffusion metrics & \texttt{collect\_hamming\_curve}, \texttt{hamming\_bits} \\
+    \bottomrule
+  \end{tabular}
+\end{table}

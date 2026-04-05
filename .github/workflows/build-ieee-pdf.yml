@@ -1,0 +1,40 @@
+name: Build IEEE PDF
+
+on:
+  push:
+    paths:
+      - "src/ieee_journal.tex"
+      - "src/**/*.tex"
+      - ".github/workflows/build-ieee-pdf.yml"
+  pull_request:
+    paths:
+      - "src/ieee_journal.tex"
+      - "src/**/*.tex"
+  workflow_dispatch:
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install TeX Live (IEEEtran)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            latexmk \
+            texlive-latex-base \
+            texlive-latex-recommended \
+            texlive-fonts-recommended \
+            texlive-publishers
+
+      - name: Compile IEEE article
+        working-directory: src
+        run: |
+          latexmk -pdf -interaction=nonstopmode -halt-on-error ieee_journal.tex
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ieee-journal-pdf
+          path: src/ieee_journal.pdf

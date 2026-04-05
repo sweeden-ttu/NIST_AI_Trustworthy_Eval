@@ -1,0 +1,8 @@
+\section*{Reproducibility Statement}
+
+\begin{itemize}
+  \item \textbf{Code:} \texttt{scripts/toy\_aes128\_trace.py} (AES tracer, S-box, \texttt{xtime}, MixColumns including \texttt{M\_NEW}, key expansion, \texttt{encrypt\_trace}, Hamming helpers).
+  \item \textbf{Driver:} \texttt{scripts/run\_coursework\_outputs.py} regenerates \texttt{output/results/*.json} and \texttt{output/diagrams/*.pdf}; requires Python~3 with \texttt{numpy}, \texttt{matplotlib}, \texttt{pycryptodome}, \texttt{Pillow}, and \texttt{openssl} on \texttt{PATH}. Q3 performs live TLS handshakes.
+  \item \textbf{LaTeX:} Build from \texttt{src/} with \texttt{pdflatex main}, \texttt{bibtex main}, then \texttt{pdflatex main} twice. Bibliography source is \texttt{main.bib}; processed file \texttt{main.bbl} is produced by BibTeX.
+  \item \textbf{Environment:} \texttt{conda activate rd-ralph-template} matches template defaults.
+\end{itemize}

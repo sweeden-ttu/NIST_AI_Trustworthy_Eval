@@ -1,0 +1,76 @@
+agent:
+  name: rd-agent-q2-block-modes
+  type: rd-agent
+  model: ibm/granite-4-h-tiny
+  embedding_model: text-embedding-nomic-embed-text-v1.5
+  provider: lm_studio
+
+command:
+  module: rdagent
+  scenario: data_science
+  args:
+    - --task
+    - >-
+      CS 6343 Q2: Compare AES-128-ECB vs AES-128-CBC on Secret.bmp using OpenSSL (or
+      equivalent). Use random 16-byte key and IV; document commands, padding (-nosalt,
+      PKCS#7), and ciphertext files. Explain why ECB leaks structure in the image body
+      while CBC appears pseudorandom; include the coursework header fix (copy first 54
+      bytes from plaintext BMP onto ciphertext) and what that demonstrates. Reference
+      NIST SP 800-38A and common ECB misuse examples. Deliver narrative suitable for
+      article subsection plus checklist for screenshots required by the grader.
+    - --output
+    - output/q2/rd-agent
+
+environment:
+  LM_STUDIO_BASE_URL: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_KEY: lm-studio
+  EMBEDDING_MODEL: text-embedding-nomic-embed-text-v1.5
+
+chroma:
+  collection: research
+  metadata:
+    phase: questions
+    question_id: q2
+    agent_type: rd-agent
+
+tools:
+  - name: file_write
+    description: Write LaTeX or markdown for Q2 ECB/CBC discussion and figure captions
+    output: output/q2/rd-agent/article-snippet.tex
+  - name: json_write
+    description: Write OpenSSL run metadata (key/IV paths, file names, commands)
+    output: results/q2-results.json
+  - name: chroma_store
+    description: Store embeddings in ChromaDB
+    collection: research
+
+retry:
+  max_attempts: 3
+  backoff: exponential
+
+timeout: 600
+
+llm_calls:
+  - purpose: literature_review
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Topic: block cipher modes ECB and CBC, IND-CPA intuition, IV role, image encryption pitfalls.
+
+      Sources: {papers}
+
+      Extract:
+      1. When ECB is acceptable vs never for structured data
+      2. CBC requirements (unpredictable IV) and error propagation basics
+      3. BMP file layout relevance to the 54-byte header exercise
+      4. OpenSSL CLI patterns for enc -aes-128-ecb / -cbc
+
+      Format as JSON matching the schema.
+  - purpose: synthesis
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Findings: {findings}
+
+      Produce student-facing prose: observation bullets for ECB vs CBC on bitmaps,
+      tie to figures (noise panels, header-fixed panels), and explicit limitations.

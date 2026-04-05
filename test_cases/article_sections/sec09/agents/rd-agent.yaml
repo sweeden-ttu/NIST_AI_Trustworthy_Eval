@@ -1,0 +1,61 @@
+agent:
+  name: rd-agent-article-sec09
+  type: rd-agent
+  model: ibm/granite-4-h-tiny
+  embedding_model: text-embedding-nomic-embed-text-v1.5
+  provider: lm_studio
+
+command:
+  module: rdagent
+  scenario: data_science
+  args:
+    - --task
+    - >-
+      Iterative refinement pass for IEEEtran article section `Meta-Review and Integration` in `src/sec/9_meta_review.tex`. Ground truth artifacts (regenerate with `python scripts/run_coursework_outputs.py`): `output/results/q1-summary.json`, `output/results/q2/openssl_run.json`, `output/results/q3-cipher-summary.json`, and PDFs under `output/diagrams/` (especially q1-*.pdf, q2-*.pdf, q3-*.pdf cited from Results). Goals: (1) Align prose and numbers with JSON/PDFs; (2) keep LaTeX IEEE-safe; (3) use \strength, \weakness, \suggestion macros from src/review_macros.tex where this section uses review-style annotations; (4) fix figure paths/labels/captions to match repo layout; (5) flag any claim not supported by the toy AES / OpenSSL / openssl s_client methodology. Output: write a merge-ready snippet to output/article_iterations/sec09/rd-agent-revision.tex (section body only, no documentclass).
+    - --output
+    - output/article_iterations/sec09/rd-agent
+
+environment:
+  LM_STUDIO_BASE_URL: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_KEY: lm-studio
+  EMBEDDING_MODEL: text-embedding-nomic-embed-text-v1.5
+
+chroma:
+  collection: research
+  metadata:
+    phase: article_iteration
+    question_id: article-sec09
+    agent_type: rd-agent
+    section_tex: src/sec/9_meta_review.tex
+
+tools:
+  - name: file_write
+    description: Revised section snippet (LaTeX body)
+    output: output/article_iterations/sec09/rd-agent-revision.tex
+  - name: json_write
+    description: Optional structured diff notes / checklist
+    output: output/article_iterations/sec09/revision-notes.json
+
+retry:
+  max_attempts: 3
+  backoff: exponential
+
+timeout: 600
+
+llm_calls:
+  - purpose: section_audit
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Section `Meta-Review and Integration` (`src/sec/9_meta_review.tex`). Current text:
+      ---
+      {section_source}
+      ---
+      List concrete mismatches vs coursework outputs (paths above) and missing citations.
+      JSON only.
+  - purpose: section_rewrite
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Apply fixes from audit: {audit}
+      Produce improved LaTeX fragment for the same section, preserving \section heading line.

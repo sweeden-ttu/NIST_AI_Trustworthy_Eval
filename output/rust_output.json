@@ -1,0 +1,13 @@
+{
+  "experiment_id": "experiment-q1",
+  "question": "q1",
+  "statistics": {
+    "mean": 0.6736666666666666,
+    "median": 0.82,
+    "std_dev": 0.22848826860232646,
+    "min": 0.351,
+    "max": 0.85,
+    "count": 3
+  },
+  "distributions": {}
+}

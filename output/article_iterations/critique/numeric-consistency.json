@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-04-05T00:46:58.892648+00:00",
+  "latex_section_files": [
+    "output/results/latex-sections-stub.json"
+  ],
+  "ground_truth_files": [
+    "output/results/q1-summary.json",
+    "output/results/q3-cipher-summary.json",
+    "output/results/q2/openssl_run.json"
+  ],
+  "by_file": {
+    "latex-sections-stub.json": {
+      "sections": {
+        "abstract": {
+          "char_count": 187,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "introduction": {
+          "char_count": 39,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "related_work": {
+          "char_count": 41,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "methodology": {
+          "char_count": 39,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "experiments": {
+          "char_count": 43,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "results": {
+          "char_count": 36,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "discussion": {
+          "char_count": 36,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "reproducibility": {
+          "char_count": 149,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        },
+        "conclusion": {
+          "char_count": 36,
+          "numeric_like_tokens": [],
+          "tokens_not_in_ground_truth_union": []
+        }
+      }
+    }
+  }
+}

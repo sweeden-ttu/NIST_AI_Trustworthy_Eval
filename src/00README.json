@@ -1,0 +1,27 @@
+{
+   "sources" : [
+      {
+         "usage" : "toplevel",
+         "filename" : "main.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "main.bib"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "natbib.sty"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "fancyhdr.sty"
+      }
+   ],
+   "spec_version" : 1,
+   "texlive_version" : "2025",
+   "process" : {
+      "compiler" : "pdflatex",
+      "bibliography" : "bibtex main"
+   },
+   "note" : "Body: intro_zyf, prelim, method_zyf, experiment, conclusion, reproducibility, ethics, appendix. Run scripts/run_coursework_outputs.py before first build if figures are missing."
+}

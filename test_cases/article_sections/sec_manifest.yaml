@@ -1,0 +1,39 @@
+# Section index for ieee_journal body (\input order matches ieee_journal.tex)
+# Pair each entry with agents under secNN/agents/{rd-agent,adk-ralph}.yaml
+sections:
+  - id: sec00
+    tex: src/sec/0_abstract.tex
+    title: Executive Summary
+  - id: sec01
+    tex: src/sec/1_technical_contribution.tex
+    title: Technical Contribution
+  - id: sec02
+    tex: src/sec/2_experimental_methodology.tex
+    title: Experimental Methodology
+  - id: sec03
+    tex: src/sec/3_results_validation.tex
+    title: Results and Claims Validation
+  - id: sec04
+    tex: src/sec/4_literature_review.tex
+    title: Literature Review and Positioning
+  - id: sec05
+    tex: src/sec/5_presentation_clarity.tex
+    title: Presentation and Clarity
+  - id: sec06
+    tex: src/sec/6_detailed_comments.tex
+    title: Detailed Technical Comments
+  - id: sec07
+    tex: src/sec/7_questions_authors.tex
+    title: Questions for Authors
+  - id: sec08
+    tex: src/sec/8_minor_issues.tex
+    title: Minor Issues
+  - id: sec09
+    tex: src/sec/9_meta_review.tex
+    title: Meta-Review and Integration
+
+iteration_protocol:
+  - Run `python scripts/run_coursework_outputs.py` (fresh figures/JSON).
+  - For each secNN (optionally in order 00→09): run rd-agent task, merge suggestions into `src/sec/*.tex`.
+  - Run adk-ralph task for structure/CI LaTeX hygiene; apply patches manually.
+  - `cd src && latexmk -pdf ieee_journal.tex`; fix until clean; repeat passes as needed.

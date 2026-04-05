@@ -1,0 +1,40 @@
+class: TlsObservationWorkflow
+alg: MultiAgentPipeline
+depth: 1
+
+journal:
+  contribution_claim: Characterize cipher suite offers and server picks in a small real-world sample.
+  related_work_keywords:
+    - TLS 1.2
+    - TLS 1.3
+    - cipher suite negotiation
+  figure_slugs:
+    - q3-client-hello-table
+    - q3-server-hello-summary
+
+phase: experiment
+
+start_state: capture
+win_states:
+  - classify_suites
+  - aggregate_sample
+lose_states: []
+
+successors:
+  capture:
+    parse_handshakes: classify_suites
+  classify_suites:
+    summarize: aggregate_sample
+
+criteria:
+  - At least two browsers and nine sites total (per assignment)
+  - TLS 1.3 mapping explanation where applicable
+  - Table of most common algorithms in sample
+
+expected_output:
+  summary_table: output/results/q3-cipher-summary.json
+  screenshots: output/diagrams/q3-wireshark/
+
+environment:
+  wireshark: Record Help → About Wireshark version (Q3)
+  browsers: List exact browser versions used for the 2-browser sample

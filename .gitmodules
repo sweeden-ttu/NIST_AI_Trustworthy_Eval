@@ -1,0 +1,6 @@
+[submodule "agents/adk-ralph"]
+	path = agents/adk-ralph
+	url = https://github.com/sweeden-ttu/adk-ralph
+[submodule "agents/rd-agent"]
+	path = agents/rd-agent
+	url = https://github.com/sweeden-ttu/rd-agent

@@ -1,0 +1,65 @@
+% Section 3 | Results \& Claims Validation | Sriya Dhakal
+\section{Results and Claims Validation}
+\label{sec:results-validation}
+
+\subsection{Question 1: AES diffusion and ablations}
+Figure~\ref{fig:q1-hamming-rounds} traces bit-level Hamming distance between internal states for all-zero plaintext versus a one-bit perturbed plaintext (standard round function). Figures~\ref{fig:q1-ablation-shiftrows} and~\ref{fig:q1-ablation-mixcolumns} repeat the measurement with ShiftRows disabled and with a documented alternative MixColumns matrix (\texttt{M\_new} in \texttt{output/results/q1-summary.json}), respectively.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{q1-hamming-rounds.pdf}
+\caption{Hamming distance (bits) after each traced AES step: baseline (Part~A).}
+\label{fig:q1-hamming-rounds}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{q1-ablation-shiftrows.pdf}
+\caption{Same metric with ShiftRows disabled (Part~B ablation).}
+\label{fig:q1-ablation-shiftrows}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{q1-ablation-mixcolumns.pdf}
+\caption{Same metric with custom MixColumns matrix (Part~C ablation).}
+\label{fig:q1-ablation-mixcolumns}
+\end{figure}
+
+\subsection{Question 2: ECB versus CBC on bitmap data}
+OpenSSL encrypts \texttt{assets/Secret.bmp} under AES-128-ECB and AES-128-CBC (PKCS\#7 padding, \texttt{-nosalt}). Figure~\ref{fig:q2-ecb-cbc-noise} visualizes ciphertext byte bodies; Figure~\ref{fig:q2-header-fixed} prepends the plaintext BMP header to ciphertext for quick visual comparison (coursework-style header fix).
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.42\linewidth]{q2-ecb-noise.pdf}\hfill
+\includegraphics[width=0.42\linewidth]{q2-cbc-noise.pdf}
+\caption{Ciphertext-body previews: ECB (left) and CBC (right).}
+\label{fig:q2-ecb-cbc-noise}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.42\linewidth]{q2-header-fixed-ecb.pdf}\hfill
+\includegraphics[width=0.42\linewidth]{q2-header-fixed-cbc.pdf}
+\caption{Plaintext BMP header applied to ECB (left) and CBC (right) ciphertext.}
+\label{fig:q2-header-fixed}
+\end{figure}
+
+\subsection{Question 3: TLS negotiation snapshot}
+OpenSSL \texttt{s\_client} captures negotiated protocol and cipher for nine public hosts; Figures~\ref{fig:q3-client-hello-table} and~\ref{fig:q3-server-hello-summary} summarize the sample. Full Wireshark ClientHello inventories for two browsers remain in \texttt{output/diagrams/q3-wireshark/}.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{q3-client-hello-table.pdf}
+\caption{Negotiated TLS parameters (openssl-derived stand-in for suite-offer tables).}
+\label{fig:q3-client-hello-table}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\linewidth]{q3-server-hello-summary.pdf}
+\caption{Frequency of server-selected ciphers in the nine-host sample.}
+\label{fig:q3-server-hello-summary}
+\end{figure}
+
+\subsection{Template demo diagrams (\texttt{examples/python})}
+Plots \texttt{performance.pdf} / \texttt{performance.png} under \texttt{output/diagrams/} come from \texttt{examples/python/generate\_results.py} and \texttt{plot\_diagram.py} (not \texttt{run\_coursework\_outputs.py}). Include \texttt{performance.pdf} in the article when every diagram in that directory should appear.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{performance.pdf}
+\caption{Demo pipeline metrics (synthetic); from \texttt{plot\_diagram.py}.}
+\label{fig:performance-demo}
+\end{figure}

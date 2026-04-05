@@ -1,0 +1,75 @@
+\section{Experiments}
+\label{sec:experiments}
+
+All figures below are produced by \texttt{python scripts/run\_coursework\_outputs.py} from the repository root (conda environment \texttt{rd-ralph-template} with Matplotlib, NumPy, PyCryptodome, Pillow; OpenSSL on \texttt{PATH}). Paths are relative to \texttt{output/diagrams/}.
+
+\subsection{Question 1: Toy AES Hamming traces}
+We compare all-zero AES-128 plaintext $P$ against $P'$ differing by a single bit in byte~0 (value \texttt{0x01}), with an all-zero key unless noted. Figure~\ref{fig:q1-base} shows bit Hamming distance after each traced step for the standard round function. Figure~\ref{fig:q1-sr-off} disables ShiftRows (\texttt{TraceOpts(disable\_shift\_rows=True)}). Figure~\ref{fig:q1-mnew} uses custom MixColumns matrix \texttt{M\_NEW} from \texttt{toy\_aes128\_trace.py}. JSON summaries, including Part~D key-flip rows, are in \texttt{output/results/q1-summary.json}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{q1-hamming-rounds.pdf}
+  \caption{Bit Hamming distance vs.\ trace step index: baseline (ShiftRows and standard MixColumns).}
+  \label{fig:q1-base}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{q1-ablation-shiftrows.pdf}
+  \caption{Same metric with ShiftRows disabled (diffusion typically slows).}
+  \label{fig:q1-sr-off}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{q1-ablation-mixcolumns.pdf}
+  \caption{Same metric with alternate \texttt{M\_NEW} MixColumns matrix.}
+  \label{fig:q1-mnew}
+\end{figure}
+
+\subsection{Question 2: ECB vs.\ CBC on BMP data}
+OpenSSL \texttt{enc} applies AES-128-ECB and AES-128-CBC (\texttt{-nosalt}) to \texttt{assets/Secret.bmp} (a minimal gradient BMP is generated if the file is absent). Figure~\ref{fig:q2-noise} visualizes ciphertext \emph{bodies} as grayscale grids; Figure~\ref{fig:q2-fix} prepends the 54-byte plaintext BMP header to ciphertext so ECB structural leakage remains visible while CBC appears more uniform at a glance \citep{dworkin2007sp800-38a}. Key and IV hex for replay are stored in \texttt{output/results/q2/openssl\_run.json} (handle per your data policy).
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\linewidth]{q2-ecb-noise.pdf}\hfill
+  \includegraphics[width=0.45\linewidth]{q2-cbc-noise.pdf}
+  \caption{Ciphertext-body previews: ECB (left) vs.\ CBC (right).}
+  \label{fig:q2-noise}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.45\linewidth]{q2-header-fixed-ecb.pdf}\hfill
+  \includegraphics[width=0.45\linewidth]{q2-header-fixed-cbc.pdf}
+  \caption{Plaintext BMP header spliced onto ciphertext: ECB (left) vs.\ CBC (right).}
+  \label{fig:q2-fix}
+\end{figure}
+
+\subsection{Question 3: TLS negotiation snapshot}
+\texttt{openssl s\_client} connects to nine public HTTPS hosts and records negotiated protocol and cipher strings. Figure~\ref{fig:q3-table} tabulates the sample; Figure~\ref{fig:q3-bar} counts cipher reuse. These plots are \textbf{not} a substitute for full Wireshark ClientHello classification required by typical coursework; they provide a reproducible PDF stand-in. Raw capture exports can be placed under \texttt{output/diagrams/q3-wireshark/}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{q3-client-hello-table.pdf}
+  \caption{Negotiated parameters from \texttt{s\_client} (openssl snapshot, not full ClientHello offer lists).}
+  \label{fig:q3-table}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\linewidth]{q3-server-hello-summary.pdf}
+  \caption{Frequency of server-selected cipher strings in the nine-host sample.}
+  \label{fig:q3-bar}
+\end{figure}
+
+\subsection{Template example metrics (Python demo)}
+\label{sec:experiments-performance}
+The following figure is \textbf{not} from the cryptography coursework driver; it is produced by the template examples \texttt{examples/python/generate\_results.py} and \texttt{examples/python/plot\_diagram.py}, writing \texttt{output/results.json} and \texttt{output/diagrams/performance.pdf} (raster: \texttt{performance.png}). Include it when the final document should reflect \emph{all} files under \texttt{output/diagrams/}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{performance.pdf}
+  \caption{Illustrative metrics panels from the demo \texttt{generate\_results}/\texttt{plot\_diagram} pipeline (synthetic scores).}
+  \label{fig:performance-demo}
+\end{figure}

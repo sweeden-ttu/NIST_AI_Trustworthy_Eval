@@ -1,0 +1,69 @@
+class: AesDiffusionExperimentWorkflow
+alg: MultiAgentPipeline
+depth: 1
+
+journal:
+  contribution_claim: Quantify AES-128 diffusion under standard and perturbed round functions.
+  related_work_keywords:
+    - Rijndael design
+    - avalanche effect
+    - AES round function
+  figure_slugs:
+    - q1-hamming-rounds
+    - q1-ablation-shiftrows
+    - q1-ablation-mixcolumns
+
+diagram: |
+  Q1 pipeline: homework PDF → hypotheses → traced AES runs → Hamming metrics → plots → IEEE Results.
+
+num_agents: 2
+phase: experiment
+
+start_state: homework_pdf
+win_states:
+  - part_a
+  - part_b
+  - part_c
+  - part_d
+lose_states: []
+
+successors:
+  homework_pdf:
+    extract_questions: hypotheses
+  hypotheses:
+    implement_tracer: part_a
+  part_a:
+    ablate_shiftrows: part_b
+  part_b:
+    custom_mixcolumns: part_c
+  part_c:
+    key_flip_run: part_d
+
+evaluation:
+  part_a: Plaintext single-bit flip; distances per round
+  part_b: ShiftRows disabled
+  part_c: Custom MixColumns matrix
+  part_d: Key single-bit flip
+
+criteria:
+  - Byte and bit Hamming distance logged rounds 0–10
+  - Figures for diffusion vs round
+  - Discussion of security intuition (educational scope only)
+  - JSON summary under output/results/q1-summary.json
+
+expected_output:
+  metrics_json: output/results/q1-summary.json
+  figures:
+    - output/diagrams/q1-hamming-rounds.pdf
+
+experiment_setups:
+  - id: aes128_trace_baseline
+    key: zeros16
+    plaintext: zeros16
+    perturbation: plaintext_one_bit
+
+environment:
+  python: ">=3.11 (conda env rd-agent-mcp for rd-agent-mcp CLI)"
+  lm_studio: Document CHAT_MODEL / EMBEDDING_MODEL when running graph-backed extraction
+  openssl: Record `openssl version -a` for any baseline AES checks (Q1 optional)
+  note: Toy AES implementation only — not for production security claims.

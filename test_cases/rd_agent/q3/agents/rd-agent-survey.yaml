@@ -1,0 +1,77 @@
+agent:
+  name: rd-agent-q3-tls-suites
+  type: rd-agent
+  model: ibm/granite-4-h-tiny
+  embedding_model: text-embedding-nomic-embed-text-v1.5
+  provider: lm_studio
+
+command:
+  module: rdagent
+  scenario: data_science
+  args:
+    - --task
+    - >-
+      CS 6343 Q3: From Wireshark (and optional openssl s_client), analyze TLS handshakes
+      for multiple browsers and at least nine sites. For each capture, classify Client
+      Hello cipher suites: key exchange, authentication, bulk cipher, mode, MAC/AEAD;
+      note TLS 1.3 differences (e.g., separate key_share vs legacy suite negotiation).
+      Summarize Server Hello selection patterns, common algorithms, and rationale
+      (performance, interoperability, PFS). Produce tables suitable for q3-client-hello
+      and q3-server-hello style figures and store raw notes under output/diagrams/q3-wireshark/.
+    - --output
+    - output/q3/rd-agent
+
+environment:
+  LM_STUDIO_BASE_URL: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_KEY: lm-studio
+  EMBEDDING_MODEL: text-embedding-nomic-embed-text-v1.5
+
+chroma:
+  collection: research
+  metadata:
+    phase: questions
+    question_id: q3
+    agent_type: rd-agent
+
+tools:
+  - name: file_write
+    description: LaTeX/markdown for Q3 cipher taxonomy and site×browser summary
+    output: output/q3/rd-agent/article-snippet.tex
+  - name: json_write
+    description: Structured rows per site/browser (offered vs selected suites)
+    output: results/q3-results.json
+  - name: chroma_store
+    description: Store embeddings in ChromaDB
+    collection: research
+
+retry:
+  max_attempts: 3
+  backoff: exponential
+
+timeout: 600
+
+llm_calls:
+  - purpose: literature_review
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Topic: TLS 1.2 vs 1.3 handshake, cipher suite strings, AEAD vs MAC-then-encrypt,
+      key exchange families (RSA, ECDHE, etc.).
+
+      Sources: {papers}
+
+      Extract:
+      1. How to read ClientHello cipher_suites in Wireshark
+      2. What TLS 1.3 hides or changes vs 1.2 in suite lists
+      3. Typical server picking order (openssl, cloud CDNs)
+      4. Privacy caveats when capturing real traffic
+
+      Format as JSON matching the schema.
+  - purpose: synthesis
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Data: {findings}
+
+      Synthesize a nine-site / two-browser style summary: frequency tables, narrative
+      for common algorithms, and explicit gaps if captures are incomplete.

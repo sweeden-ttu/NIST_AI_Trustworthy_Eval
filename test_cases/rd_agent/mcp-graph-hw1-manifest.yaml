@@ -1,0 +1,28 @@
+# rd-agent-mcp ResearchGraph run against homework (see mcp/examples/research-graph-overview.md)
+run_id: bbed397b-26a3-44b3-bd90-651f16569473
+homework_pdf: homework-assignment.pdf
+homework_txt_sidecar: homework-assignment.txt
+lm_studio_base_url: http://127.0.0.1:1234/v1
+phases_executed:
+  - extract_questions
+  - generate_embeddings
+  - design_experiments
+  - design_prompts
+  - run_agents
+  - compile_results
+agent_execution: simulated
+env_note: RD_AGENT_MCP_EXEC_AGENTS=false for this run; set true only in trusted environments.
+output_bundle: output/results/research-graph-latest.json
+output_bundle_timestamped: output/results/research-graph-bbed397b-26a3-44b3-bd90-651f16569473.json
+ieee_latex_stubs: output/snippets/ieee-latex-stubs-research-graph.tex
+chroma_persist_dir: output/embeddings/chroma_data
+extracted_question_ids:
+  - q1
+  - q2
+  - q3
+quality_notes:
+  q1: LLM experiment hints align with avalanche / ShiftRows / MixColumns; use with existing 0-experiment-workflow.yaml.
+  q2: >-
+    design_experiments output drifted to generic "modes of operation" software tests — treat as discard;
+    ground truth remains homework (ECB vs CBC, Secret.bmp, OpenSSL) in 0-experiment-workflow.yaml.
+  q3: TLS cipher suite test ideas are directionally useful; align captures with homework (2 browsers × 9 sites).

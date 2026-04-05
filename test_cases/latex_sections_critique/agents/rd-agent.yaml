@@ -1,0 +1,59 @@
+agent:
+  name: rd-agent-latex-sections-critique
+  type: rd-agent
+  model: ibm/granite-4-h-tiny
+  embedding_model: text-embedding-nomic-embed-text-v1.5
+  provider: lm_studio
+
+command:
+  module: rdagent
+  scenario: data_science
+  args:
+    - --task
+    - >-
+      Critique every file matching `output/results/latex-sections*.json`. Each file is a JSON object whose keys are logical section names (e.g. abstract, introduction, related_work, methodology, experiments, results, discussion, reproducibility, conclusion) and whose values are LaTeX fragments (may include `\\section`, `\\begin{abstract}`, labels, etc.). Read all such files in the repo. Ground truth for factual validation (regenerate with `python scripts/run_coursework_outputs.py`): `output/results/q1-summary.json`, `output/results/q2/openssl_run.json` (and other JSON under `output/results/q2/` if present), `output/results/q3-cipher-summary.json`, plus `output/diagrams/*.pdf` names if the text references figures. If present, also read `output/article_iterations/critique/numeric-consistency.json` from `python scripts/critique_latex_sections_stub.py` as machine hints—not as authority; resolve conflicts in favor of the summary JSON and diagrams. For **each input JSON file**, and **each section** inside it: (1) Assign a letter grade A–F and a numeric score 0–100 for clarity, technical accuracy, and alignment with coursework scope (toy crypto / educational context). (2) Extract **testable claims** (numbers, causal statements, comparative statements, security claims); for each claim mark supported / unsupported / cannot_verify from the ground-truth files only; cite which file/key or figure supports or contradicts. (3) Across sections **within the same JSON file**, verify **experimental results** stated in `results` (and `experiments` if present) match the **overall findings** summarized in `discussion`, `conclusion`, and `abstract`; flag contradictions, missing caveats, or overclaiming. (4) Note stub/placeholder sections (very short, only headings) separately with grade "N/A" and a short reason. Write **one** JSON document to `output/article_iterations/critique/latex-sections-critique.json` with this top-level shape: `{"critique_version":1,"generated_at":"ISO-8601","inputs":["paths reviewed"],"ground_truth_paths":["..."],"sections_by_file":{"<basename>":{"<section_key>":{"grades":{"letter":"B","numeric":85},"claims":[{"text":"...","verdict":"supported|unsupported|cannot_verify","evidence":[{"path":"...","note":"..."}]}],"consistency_notes":"...","action_items":["..."]}}},"cross_cutting":{"results_vs_discussion":"...","results_vs_conclusion":"...","abstract_vs_body":"..."}}`. JSON only in that file; optional human-readable `output/article_iterations/critique/critique.md` summary is allowed if you can emit it via file_write.
+    - --output
+    - output/article_iterations/critique/rd-agent
+
+environment:
+  LM_STUDIO_BASE_URL: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  OPENAI_API_BASE: http://192.168.0.13:1234/v1
+  LITELLM_OPENAI_API_KEY: lm-studio
+  EMBEDDING_MODEL: text-embedding-nomic-embed-text-v1.5
+
+chroma:
+  collection: research
+  metadata:
+    phase: latex_sections_critique
+    question_id: latex-sections-critique
+    agent_type: rd-agent
+
+tools:
+  - name: json_write
+    description: Structured per-section grades, claim validation, cross-section consistency
+    output: output/article_iterations/critique/latex-sections-critique.json
+  - name: file_write
+    description: Optional Markdown summary for humans
+    output: output/article_iterations/critique/critique.md
+
+retry:
+  max_attempts: 3
+  backoff: exponential
+
+timeout: 900
+
+llm_calls:
+  - purpose: critique_draft
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Input LaTeX-section JSON (one file): path={latex_path}
+      Content (stringified or pretty-printed): {latex_sections_json}
+      Ground-truth excerpts or paths: {ground_truth_digest}
+      Numeric hints (if any): {numeric_hints}
+      Produce the critique JSON fragment for this file only: sections_by_file["basename"] and any cross_cutting notes limited to this file's sections. JSON only.
+  - purpose: critique_merge
+    model: ibm/granite-4-h-tiny
+    prompt_template: |
+      Merge partial critiques: {partial_critiques}
+      Final document must match the schema described in the main task (critique_version, inputs, ground_truth_paths, sections_by_file, cross_cutting). JSON only.
