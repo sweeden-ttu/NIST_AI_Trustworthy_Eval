@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build numeric-consistency hints for LaTeX section JSON vs coursework result JSON.
+"""Build numeric-consistency hints for LaTeX section JSON vs NIST experiment JSON.
 
 Reads all ``output/results/latex-sections*.json`` files, flattens numeric-like tokens from
-ground-truth JSON under ``output/results/``, and flags tokens appearing in each section
-that never occur in that ground-truth string set (heuristic; false positives possible).
+Quiz #3 ground truth (``nist_eval_latest.json``, ``nist_quiz_scores.json``), and flags
+tokens appearing in each section that never occur in that ground-truth string set
+(heuristic; false positives possible).
 
 Writes ``output/article_iterations/critique/numeric-consistency.json``.
 """
@@ -21,9 +22,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = ROOT / "output/article_iterations/critique/numeric-consistency.json"
 DEFAULT_LATEX_GLOB = "latex-sections*.json"
 GROUND_TRUTH_REL = [
-    "output/results/q1-summary.json",
-    "output/results/q3-cipher-summary.json",
-    "output/results/q2/openssl_run.json",
+    "output/results/nist_eval_latest.json",
+    "output/results/nist_quiz_scores.json",
 ]
 
 # LaTeX/command noise to skip as standalone "numbers"

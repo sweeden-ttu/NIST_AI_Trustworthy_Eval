@@ -10,7 +10,7 @@ Use **`providerID`** / **`modelID`** from [`recommended_models.json`](./recommen
 {
   "tool": "opencode_context",
   "arguments": {
-    "directory": "/absolute/path/to/NIST_AI_Trustworthy_Eval"
+    "directory": "/Users/sweeden/NIST_AI_Trustworthy_Eval"
   }
 }
 ```
@@ -23,7 +23,7 @@ Replace the prompt body with a short ask to list missing artifacts and contradic
 {
   "tool": "opencode_run",
   "arguments": {
-    "directory": "/absolute/path/to/NIST_AI_Trustworthy_Eval",
+    "directory": "/Users/sweeden/NIST_AI_Trustworthy_Eval",
     "providerID": "openrouter",
     "modelID": "nvidia/nemotron-3-super-120b-a12b:free",
     "maxDurationSeconds": 600,
@@ -41,6 +41,6 @@ After `output/nist_graph_loop/prompts/item_XX.md` exists, paste its contents as 
 OpenCode may run shell if enabled; otherwise run locally:
 
 ```bash
-cd /absolute/path/to/NIST_AI_Trustworthy_Eval
+cd /Users/sweeden/NIST_AI_Trustworthy_Eval
 uv run python scripts/run_nist_llm_evaluation.py
 ```

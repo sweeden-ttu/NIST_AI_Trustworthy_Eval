@@ -41,8 +41,10 @@ SECTIONS: list[dict[str, str]] = [
         "title": "Experimental Methodology",
         "rd_focus": (
             "Section focus: **reproducible methodology**—how `uv run python scripts/run_nist_llm_evaluation.py` "
-            "was executed (API base URL, `NIST_EVAL_MODEL`, temperature), dry-run vs live, and how human "
-            "adjudication produced `nist_quiz_scores.json`; cite `scripts/nist_quiz_prompts.py` for prompt parity."
+            "was executed; document defaults `OPENAI_BASE_URL=http://localhost:1234/v1` and "
+            "`NIST_EVAL_MODEL=unrestricted-knowledge-will-not-refuse-15b` (or overrides), temperature, "
+            "dry-run vs live, and how human adjudication produced `nist_quiz_scores.json`; cite "
+            "`scripts/nist_quiz_prompts.py` for prompt parity."
         ),
         "adk_note": "Check that described driver and env vars match keys present in `nist_eval_latest.json` (model, base_url, temperature).",
     },
@@ -122,7 +124,7 @@ SECTIONS: list[dict[str, str]] = [
 
 RD_PREFIX = """Iterative refinement pass for IEEEtran article section `{title}` in `{tex}`. **Prerequisites:** the full 14-prompt NIST Quiz battery has been run. **Primary ground truth:** `output/results/nist_eval_latest.json` (top-level `items` with numeric `id` 1–14, each with `prompt`, `response`, `error`; item 8 may include a `note` about the 2-turn thread after item 7), `output/results/nist_quiz_scores.json` (object `scores` whose JSON keys are the strings 1 through 14 and values are `C`, `P`, or `N` per `homework-assignment.pdf`), optional `output/results/nist_rubric_table.tex`, and prompt text parity via `scripts/nist_quiz_prompts.py`. **Rubric source of truth:** `homework-assignment.pdf` (repo root). """
 
-RD_SUFFIX = r""" **Common goals:** keep LaTeX IEEE-safe; use \strength, \weakness, \suggestion macros from `src/review_macros.tex` where this section uses review-style annotations. **Legacy crypto coursework** (`scripts/run_coursework_outputs.py`, `output/diagrams/`, q1–q3 JSON) is **out of scope** unless this section explicitly cites those artifacts. **Output:** write a merge-ready snippet to `output/article_iterations/{sec_id}/rd-agent-revision.tex` (section body only, no \documentclass)."""
+RD_SUFFIX = r""" **Common goals:** keep LaTeX IEEE-safe; use \strength, \weakness, \suggestion macros from `src/review_macros.tex` where this section uses review-style annotations. **Artifact refresh:** `python scripts/run_coursework_outputs.py` regenerates NIST eval JSON (dry-run by default) and the rubric TeX when scores exist—per `test_cases/CONFIG`. Do not treat legacy toy-crypto figures or q1–q3 coursework JSON as ground truth unless this section explicitly cites them. **Output:** write a merge-ready snippet to `output/article_iterations/{sec_id}/rd-agent-revision.tex` (section body only, no \documentclass)."""
 
 
 def rd_agent_yaml(sec: dict[str, str]) -> str:

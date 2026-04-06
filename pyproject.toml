@@ -2,8 +2,10 @@
 name = "nist-ai-trustworthy-eval"
 version = "0.1.0"
 description = "NIST-style trustworthy LLM evaluation courseware and tooling"
-requires-python = ">=3.10"
-dependencies = []
+requires-python = ">=3.11"
+dependencies = [
+  "rd-agent-mcp",
+]
 
 [project.optional-dependencies]
 kb = [
@@ -18,3 +20,6 @@ nist-loop = [
   "langgraph>=0.2.0",
   "langchain-core>=0.3.0",
 ]
+
+[tool.uv.sources]
+rd-agent-mcp = { path = "agents/rd-agent-mcp", editable = true }

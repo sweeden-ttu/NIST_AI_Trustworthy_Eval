@@ -5,8 +5,8 @@
 Prompt text, identifiers, and category metadata live in \texttt{scripts/nist\_quiz\_prompts.py}. The driver \texttt{scripts/run\_nist\_llm\_evaluation.py} issues each prompt as a single user message to an \textbf{OpenAI-compatible} Chat Completions endpoint, records the assistant message, and writes \texttt{output/results/nist\_eval\_latest.json}. Environment variables configure the run:
 \begin{itemize}
   \item \texttt{OPENAI\_API\_KEY} --- bearer token (required for live calls).
-  \item \texttt{OPENAI\_BASE\_URL} --- defaults to \texttt{https://api.openai.com/v1} (compatible with many gateways).
-  \item \texttt{NIST\_EVAL\_MODEL} --- model id string (default \texttt{gpt-4o-mini}).
+  \item \texttt{OPENAI\_BASE\_URL} --- defaults to \texttt{http://localhost:1234/v1} (local OpenAI-compatible server, e.g.\ LM Studio).
+  \item \texttt{NIST\_EVAL\_MODEL} --- model id string (default \texttt{unrestricted-knowledge-will-not-refuse-15b}).
 \end{itemize}
 A \texttt{--dry-run} mode emits JSON without network access for pipeline checks.
 

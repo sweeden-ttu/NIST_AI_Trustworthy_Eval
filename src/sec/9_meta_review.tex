@@ -1,14 +1,20 @@
-% Section 9 | Meta-Review \& Integration | Phaninder Reddy Masapeta (Lead)
+% Section 9 | Meta-Review \& Integration | Quiz \#3 NIST LLM evaluation track
 \section{Meta-Review and Integration}
 \label{sec:meta-review}
 
-The three tracks (AES instrumentation, modes on structured data, TLS sampling) form a coherent applied-cryptography lab narrative. Together they reinforce standard lessons: rapid diffusion inside AES rounds, structural failure of ECB on repetitive plaintexts, and the diversity of negotiated TLS stacks in the wild.
+The fourteen prompts collectively stress-test a single target model across \textbf{NIST AI RMF} trustworthy characteristics (valid/reliable, safe, secure and resilient, explainable, privacy-enhanced, fair, accountable and transparent). The narrative in \texttt{experiment.tex} (built via \texttt{src/main.tex}) ties each item to a research question, hypothesis, and rubric label; this meta-review checks that integration is coherent rather than a disconnected list of refusals or boilerplate.
 
-\strength{Reproducibility is foregrounded: scripts, output paths, and environment assumptions are stated explicitly.}
+\strength{Traceability is explicit: prompts are versioned in \texttt{scripts/nist\_quiz\_prompts.py}, responses in \texttt{output/results/nist\_eval\_latest.json}, and human scores in \texttt{output/results/nist\_quiz\_scores.json}.}
 
-\section{Reproducibility}
-\label{sec:reproducibility}
-Regenerate metrics, JSON summaries, and PDF figures with:
-\texttt{conda activate rd-ralph-template \&\& python scripts/run\_coursework\_outputs.py} from the repository root (requires OpenSSL and network access for TLS probes). Outputs land in \texttt{output/results/} and \texttt{output/diagrams/} as referenced by \texttt{test\_cases/rd\_agent/}. Key/IV material for Q2 is recorded under \texttt{output/results/q2/openssl\_run.json} for local replay.
+\subsection*{Reproducibility (IEEE build)}
+Regenerate evaluation artifacts from the repository root:
+\begin{itemize}
+  \item \textbf{Structure check (no API key):} \texttt{python scripts/run\_nist\_llm\_evaluation.py --dry-run}
+  \item \textbf{Live run:} set \texttt{OPENAI\_API\_KEY}, optional \texttt{OPENAI\_BASE\_URL}, \texttt{NIST\_EVAL\_MODEL}; then \texttt{python scripts/run\_nist\_llm\_evaluation.py}
+  \item \textbf{Orchestrated refresh:} \texttt{python scripts/run\_coursework\_outputs.py} (reads \texttt{test\_cases/CONFIG}; dry-run by default; \texttt{--nist-live} for API)
+  \item \textbf{Rubric table:} edit \texttt{output/results/nist\_quiz\_scores.json}, then \texttt{python scripts/emit\_nist\_rubric\_table.py}
+\end{itemize}
 
-For the LangGraph/MCP pipeline, set \texttt{LM\_STUDIO\_BASE\_URL} and enable \texttt{RD\_AGENT\_MCP\_EXEC\_AGENTS=true} only in trusted environments when spawning real \texttt{rd-agent} / \texttt{adk-ralph} subprocesses from \texttt{rd-agent-mcp}.
+\noindent\textbf{Note:} Legacy applied-cryptography coursework (OpenSSL, toy AES figures) is \textbf{not} part of the Quiz~\#3 reproducibility path. If you still maintain that track, document it separately and do not confuse it with the NIST JSON pipeline above.
+
+For LangGraph/\texttt{rd-agent-mcp}, set \texttt{LM\_STUDIO\_BASE\_URL} and use \texttt{RD\_AGENT\_MCP\_EXEC\_AGENTS=true} only in trusted environments when spawning real \texttt{rd-agent} / \texttt{adk-ralph} subprocesses.

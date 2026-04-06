@@ -1,25 +1,60 @@
 name: Agent Demo
 
+# Phase-1: Autogen + Ollama on a self-hosted runner (local LLM).
+# Phase-2 / Phase-3: OpenAI-compatible cloud judge + keyword rubric on ubuntu-latest.
+# Push to main: runs phase-2 then phase-3 if output/agent_eval/phase1_histories.json exists in the repo.
+
 on:
   workflow_dispatch:
     inputs:
+      phase:
+        type: choice
+        description: >-
+          phase-1 = local Ollama (self-hosted runner). phase-2 / phase-3 = cloud (needs phase1 JSON).
+          cloud-pipeline = phase-1 then phase-2 then phase-3 (requires self-hosted runner).
+        options:
+          - phase-1
+          - phase-2
+          - phase-3
+          - cloud-pipeline
+        required: true
+        default: phase-2
       question:
         type: choice
+        description: NIST items to run in phase-1 (ignored for phase-2/3)
         options:
+          - all
           - q1
           - q2
           - q3
-        description: Question to demo
+          - q4
+          - q5
+          - q6
+          - q7
+          - q8
+          - q9
+          - q10
+          - q11
+          - q12
+          - q13
+          - q14
         required: true
-        default: q1
+        default: all
+
+  push:
+    branches:
+      - main
 
 env:
+  OLLAMA_MODEL: llama3.2
+  OLLAMA_BASE_URL: http://localhost:11434
   CHAT_MODEL: gpt-4o
-  EMBEDDING_MODEL: text-embedding-3-small
 
 jobs:
-  python-demo:
-    runs-on: ubuntu-latest
+  phase-1-local:
+    name: Phase 1 (Ollama / self-hosted)
+    if: github.event_name == 'workflow_dispatch' && (inputs.phase == 'phase-1' || inputs.phase == 'cloud-pipeline')
+    runs-on: self-hosted
 
     steps:
       - name: Checkout
@@ -28,76 +63,113 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
-      - name: Install dependencies
-        run: pip install rd-agent-mcp
+      - name: Install Autogen + Ollama client
+        run: |
+          pip install autogen-agentchat autogen-core "autogen-ext[openai,ollama]" openai python-dotenv
 
-      - name: Run Python Analysis
+      - name: Run phase-1 (NIST q1–q14 scenarios)
+        env:
+          OLLAMA_BASE_URL: ${{ vars.OLLAMA_BASE_URL }}
+          OLLAMA_MODEL: ${{ vars.OLLAMA_MODEL }}
+        run: |
+          python scripts/agent_eval_multiturn_phases.py --phase phase-1 --questions "${{ inputs.question }}"
+
+      - name: Upload phase-1 JSON
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-eval-phase1
+          path: output/agent_eval/phase1_histories.json
+          if-no-files-found: error
+
+  phase-2-3-cloud:
+    name: Phase 2–3 (cloud LLM + rubric)
+    needs: [phase-1-local]
+    if: |
+      always() &&
+      !failure() &&
+      !cancelled() &&
+      (needs.phase-1-local.result == 'success' || needs.phase-1-local.result == 'skipped') &&
+      (
+        (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+        (
+          github.event_name == 'workflow_dispatch' &&
+          (inputs.phase == 'phase-2' || inputs.phase == 'phase-3' || inputs.phase == 'cloud-pipeline')
+        )
+      )
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHub Actions: `strategy.matrix` belongs on the job, not under `steps`.
+      # Each step only allows keys like name, uses, run, with, env, if, etc.
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download phase-1 artifact (cloud-pipeline only)
+        if: github.event_name == 'workflow_dispatch' && inputs.phase == 'cloud-pipeline' && needs.phase-1-local.result == 'success'
+        uses: actions/download-artifact@v4
+        with:
+          name: agent-eval-phase1
+          path: output/agent_eval/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Autogen (OpenAI + Ollama extras for imports)
+        run: |
+          pip install autogen-agentchat autogen-core "autogen-ext[openai,ollama]" openai python-dotenv
+
+      - name: Verify NIST 14-prompt template (dry run)
+        run: |
+          python scripts/run_nist_llm_evaluation.py --dry-run --out output/results/nist_eval_agent_demo_dry.json
+          python -c "import json; from pathlib import Path; d=json.loads(Path('output/results/nist_eval_agent_demo_dry.json').read_text(encoding='utf-8')); ids=sorted(x.get('id') for x in d.get('items',[])); assert ids==list(range(1,15)), ids; print('OK: 14 NIST items present')"
+
+      - name: Ensure phase-1 histories exist
+        id: check_phase1
+        run: |
+          if [ -f output/agent_eval/phase1_histories.json ]; then
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+            echo "Missing output/agent_eval/phase1_histories.json"
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "On push without committed phase-1 output — skipping cloud phases."
+              exit 0
+            fi
+            exit 1
+          fi
+
+      - name: Phase 2 — LLM evaluator
+        if: steps.check_phase1.outputs.ok == 'true' && (github.event_name == 'push' || inputs.phase == 'phase-2' || inputs.phase == 'cloud-pipeline')
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL != '' && secrets.OPENAI_BASE_URL || '' }}
+          CHAT_MODEL: ${{ vars.CHAT_MODEL }}
         run: |
-          python examples/python/generate_results.py --question ${{ inputs.question }}
+          if [ -z "${OPENAI_API_KEY:-}" ]; then
+            if [ "${{ github.event_name }}" = "push" ]; then
+              echo "OPENAI_API_KEY not set; skipping phase-2 on push"
+              exit 0
+            fi
+            echo "::error::OPENAI_API_KEY is required for phase-2"
+            exit 1
+          fi
+          python scripts/agent_eval_multiturn_phases.py --phase phase-2
 
-      - name: Upload Python Results
+      - name: Phase 3 — keyword rubric
+        if: steps.check_phase1.outputs.ok == 'true' && (github.event_name == 'push' || inputs.phase == 'phase-3' || inputs.phase == 'cloud-pipeline')
+        run: |
+          python scripts/agent_eval_multiturn_phases.py --phase phase-3
+
+      - name: Upload agent eval outputs
+        if: steps.check_phase1.outputs.ok == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: python-results-${{ inputs.question }}
-          path: output/results.json
-
-  rust-demo:
-    runs-on: ubuntu-latest
-    if: false
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Rust
-        uses: dtolnay/rust-toolchain@v1
-        with:
-          toolchain: stable
-
-      - name: Build Rust Tool
-        run: |
-          cd examples/rust
-          cargo build --release
-
-      - name: Run Rust Analysis
-        run: |
-          cd examples/rust
-          ./target/release/analyze_stats --input ../output/results.json
-
-      - name: Upload Rust Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: rust-results-${{ inputs.question }}
-          path: output/rust_output.json
-
-  latex-demo:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up LaTeX
-        uses: xu-cheng/latex-action@v3
-        with:
-          root_file: main.tex
-          working_directory: src
-          args: -pdf -interaction=nonstopmode
-
-      - name: Generate LaTeX Table
-        run: |
-          rd-agent-mcp compile-results \
-            --input output/results.json \
-            --output output/tables/
-
-      - name: Upload LaTeX Output
-        uses: actions/upload-artifact@v4
-        with:
-          name: latex-results-${{ inputs.question }}
+          name: agent-eval-cloud-${{ github.run_id }}
           path: |
-            src/main.pdf
-            output/tables/
+            output/agent_eval/
+          if-no-files-found: warn

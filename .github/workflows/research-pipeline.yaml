@@ -22,6 +22,17 @@ on:
           - q1
           - q2
           - q3
+          - q4
+          - q5
+          - q6
+          - q7
+          - q8
+          - q9
+          - q10
+          - q11
+          - q12
+          - q13
+          - q14
         description: Question to process
         required: false
         default: all
@@ -29,9 +40,9 @@ on:
         type: choice
         options:
           - auto
+          - huggingface
+          - mistral
           - openai
-          - anthropic
-          - google
         description: LLM provider to use
         required: false
         default: auto
@@ -64,12 +75,17 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: pip-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+          key: pip-${{ runner.os }}-${{ hashFiles('**/requirements.txt', '**/pyproject.toml') }}
 
       - name: Install dependencies
         run: pip install rd-agent-mcp
         env:
           pip_cache_dir: ~/.cache/pip
+
+      - name: Verify NIST 14-prompt battery (dry run, no API key)
+        run: |
+          python scripts/run_nist_llm_evaluation.py --dry-run --out output/results/nist_eval_ci_dry_run.json
+          python -c "import json; from pathlib import Path; p=Path('output/results/nist_eval_ci_dry_run.json'); d=json.loads(p.read_text(encoding='utf-8')); ids=sorted(x.get('id') for x in d.get('items',[])); want=list(range(1,15)); assert ids==want, f'expected item ids 1..14, got {ids}'; print('OK: nist_eval JSON contains all 14 items')"
 
       - name: Run Phase
         env:
@@ -78,18 +94,26 @@ jobs:
           RD_AGENT_MCP_EXEC_AGENTS: "false"
           CHAT_MODEL: ${{ inputs.provider == 'auto' && 'gpt-4o' || inputs.provider }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL != '' && secrets.OPENAI_BASE_URL || 'http://localhost:1234/v1' }}
+          NIST_EVAL_MODEL: ${{ secrets.NIST_EVAL_MODEL != '' && secrets.NIST_EVAL_MODEL || 'unrestricted-knowledge-will-not-refuse-15b' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           LANGSMITH_API_KEY: ${{ secrets.LANGSMITH_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set -e
+          Q="${{ inputs.question }}"
           if [ "${{ inputs.phase }}" == "full" ]; then
             rd-agent-mcp research-phase \
-              --topic "Research on Agentic Workflows" \
-              --papers "https://arxiv.org/abs/2505.14738"
+              --topic "NIST AI RMF trustworthy-characteristics LLM evaluation (14-prompt Quiz #3; test_cases/rd_agent q1-q14)"
+          elif [ "$Q" = "all" ]; then
+            for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14; do
+              echo "=== run-phase ${{ inputs.phase }} question q${n} ==="
+              rd-agent-mcp run-phase ${{ inputs.phase }} --question "q${n}"
+            done
           else
-            rd-agent-mcp run-phase ${{ inputs.phase }} --question ${{ inputs.question }}
+            rd-agent-mcp run-phase ${{ inputs.phase }} --question "$Q"
           fi
 
       - name: Commit Results
@@ -132,10 +156,24 @@ jobs:
 
       - name: Run Test Cases
         run: |
-          if [ -d "test_cases" ]; then
+          if [ ! -d "test_cases" ]; then
+            echo "No test_cases directory"
+            exit 0
+          fi
+          Q="${{ inputs.question }}"
+          if [ "$Q" = "all" ]; then
+            mkdir -p output/test-results
+            for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14; do
+              echo "=== test_runner question q${n} ==="
+              python -m rd_agent_mcp.test_runner \
+                --test-dir test_cases \
+                --question "q${n}" \
+                --output "output/test-results/q${n}/"
+            done
+          else
             python -m rd_agent_mcp.test_runner \
               --test-dir test_cases \
-              --question ${{ inputs.question }} \
+              --question "$Q" \
               --output output/test-results/
           fi
 
@@ -144,6 +182,9 @@ jobs:
           if [ -f "output/results.json" ]; then
             echo "Results JSON validated"
             python -c "import json; json.load(open('output/results.json'))"
+          fi
+          if [ -f "output/results/nist_eval_ci_dry_run.json" ]; then
+            python -c "import json; from pathlib import Path; p=Path('output/results/nist_eval_ci_dry_run.json'); d=json.loads(p.read_text(encoding='utf-8')); ids=sorted(x.get('id') for x in d.get('items',[])); assert ids==list(range(1,15)), ids; print('Validated nist_eval_ci_dry_run.json: 14 items')"
           fi
 
       - name: Upload Test Results

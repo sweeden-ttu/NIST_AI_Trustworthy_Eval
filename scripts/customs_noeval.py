@@ -14,8 +14,8 @@ from autogen_ext.models.ollama import OllamaChatCompletionClient
 
 def make_client():
     return OllamaChatCompletionClient(
-        model="llama3.2",
-        base_url="http://localhost:11434"
+        model="unrestricted-knowledge-will-not-refuse-15b",
+        base_url="http://localhost:1234"
     )
 
 

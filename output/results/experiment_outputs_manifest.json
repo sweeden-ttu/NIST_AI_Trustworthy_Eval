@@ -1,0 +1,39 @@
+{
+  "generated_at": "2026-04-06T00:11:57.421236+00:00",
+  "config": "test_cases/CONFIG",
+  "metadata_from_config": {
+    "course": "CS5374",
+    "semester": "Spring 2026",
+    "assignment": "Quiz #3 \u2014 NIST Trustworthy AI (LLM compliance checking)",
+    "homework_pdf": "homework-assignment.pdf",
+    "journal_target": "src/main.tex \u2192 main.pdf (research write-up + rubric results)",
+    "topic": "NIST AI RMF trustworthy characteristics; fourteen stress-test prompts; C/P/N rubric; optional scripts/course/support_noeval.py and customs_noeval.py from Canvas."
+  },
+  "assignment": "Quiz #3 \u2014 NIST Trustworthy AI (LLM compliance checking)",
+  "steps": [
+    {
+      "name": "run_nist_llm_evaluation",
+      "skipped": true
+    },
+    {
+      "name": "emit_nist_rubric_table",
+      "argv": [
+        "/Applications/Xcode.app/Contents/Developer/usr/bin/python3",
+        "/Users/sweeden/NIST_AI_Trustworthy_Eval/scripts/emit_nist_rubric_table.py",
+        "--scores",
+        "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/results/nist_quiz_scores.json",
+        "--out",
+        "/Users/sweeden/NIST_AI_Trustworthy_Eval/output/results/nist_rubric_table.tex"
+      ],
+      "returncode": 0
+    }
+  ],
+  "paths_from_config": {
+    "question_root": "rd_agent",
+    "prompts_python": "scripts/nist_quiz_prompts.py",
+    "eval_driver": "scripts/run_nist_llm_evaluation.py",
+    "eval_json": "output/results/nist_eval_latest.json",
+    "rubric_json": "output/results/nist_quiz_scores.json",
+    "rubric_table_tex": "output/results/nist_rubric_table.tex"
+  }
+}

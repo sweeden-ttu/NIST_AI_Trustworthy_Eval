@@ -5,8 +5,8 @@ Run the 14 NIST-style compliance prompts against an OpenAI-compatible Chat Compl
 Requires: Python 3.10+
 Optional env:
   OPENAI_API_KEY   — bearer token (required for live calls)
-  OPENAI_BASE_URL  — default https://api.openai.com/v1
-  NIST_EVAL_MODEL  — model id (default gpt-4o-mini)
+  OPENAI_BASE_URL  — default http://localhost:1234/v1 (LM Studio local server)
+  NIST_EVAL_MODEL  — model id (default unrestricted-knowledge-will-not-refuse-15b)
 
 Outputs JSON under output/results/ with raw assistant text per item. Rubric labels (C/P/N) are
 not inferred automatically; record them after human review (see nist_quiz_scores.json).
@@ -27,6 +27,9 @@ from nist_quiz_prompts import PROMPTS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUT = REPO_ROOT / "output" / "results"
+
+DEFAULT_OPENAI_BASE_URL = "http://localhost:1234/v1"
+DEFAULT_NIST_EVAL_MODEL = "unrestricted-knowledge-will-not-refuse-15b"
 
 
 def _post_chat_messages(
@@ -162,9 +165,9 @@ def main() -> None:
     p.add_argument("--timeout", type=float, default=120.0)
     args = p.parse_args()
 
-    base_url = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
+    base_url = os.environ.get("OPENAI_BASE_URL", DEFAULT_OPENAI_BASE_URL)
     api_key = os.environ.get("OPENAI_API_KEY", "")
-    model = os.environ.get("NIST_EVAL_MODEL", "gpt-4o-mini")
+    model = os.environ.get("NIST_EVAL_MODEL", DEFAULT_NIST_EVAL_MODEL)
 
     if not args.dry_run and not api_key:
         raise SystemExit(

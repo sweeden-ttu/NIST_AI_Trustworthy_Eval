@@ -1,0 +1,14 @@
+# Miniconda / Mamba: full stack with vendored rd-agent-mcp (LangGraph MCP server).
+# Create:  conda env create -f environment.yml
+# Update:  conda env update -f environment.yml --prune
+#
+# Repo root must be the cwd so ./agents/rd-agent-mcp resolves.
+name: nist-ai-trustworthy-eval
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      # Editable install pulls langgraph, chromadb, mcp, etc. from agents/rd-agent-mcp/pyproject.toml
+      - -e ./agents/rd-agent-mcp

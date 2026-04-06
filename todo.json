@@ -1,0 +1,87 @@
+{
+  "generated_at": "2026-04-05T00:00:00Z",
+  "updated_at": "2026-04-06T00:00:00Z",
+  "generator": "/init skill — template audit vs Quiz #3 (homework-assignment.pdf)",
+  "target_agent": "adk-ralph",
+  "homework_source_of_truth": {
+    "pdf": "homework-assignment.pdf",
+    "config_index": "test_cases/CONFIG",
+    "notes": "Rubric definitions and submission expectations live in the PDF; verify items against the PDF manually."
+  },
+  "template_keyword_audit": {
+    "summary": "main.tex abstract and experiment.tex still use 'template' where packaged scores may be replaced after a live run — intentional until the student commits post-live scores.",
+    "stale_or_misaligned_tex": [
+      {
+        "file": "src/sec/9_meta_review.tex",
+        "status": "addressed",
+        "note": "Rewritten for NIST reproducibility; crypto/OpenSSL default path removed."
+      },
+      {
+        "file": "src/sec/3_results_validation.tex",
+        "status": "addressed",
+        "note": "Rewritten for JSON/rubric validation; legacy figure subsections removed."
+      }
+    ]
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "Run live NIST eval and replace illustrative rubric",
+      "priority": "P0",
+      "status": "in_progress",
+      "note": "nist_eval_latest.json and nist_quiz_scores.json exist with full ids 1–14; current eval may still show dry_run:true — run live API and refresh scores for final submission.",
+      "commands_hint": [
+        "python scripts/run_nist_llm_evaluation.py",
+        "edit output/results/nist_quiz_scores.json",
+        "python scripts/emit_nist_rubric_table.py"
+      ],
+      "acceptance_criteria": [
+        "nist_eval_latest.json reflects your model and timestamps",
+        "nist_quiz_scores.json has C/P/N for all keys 1..14 grounded in homework rubric",
+        "experiment.tex narrative matches your scores (remove or narrow 'template' disclaimers where no longer true)"
+      ]
+    },
+    {
+      "id": "T2",
+      "title": "Rewrite sec/3_results_validation.tex for NIST artifacts",
+      "priority": "P0",
+      "status": "completed",
+      "acceptance_criteria": [
+        "Figures/tables reference nist_rubric_table.tex or tabular inline from scores",
+        "No required dependency on deleted crypto PDFs unless intentionally retained as appendix",
+        "Cross-check every claim against nist_eval_latest.json items 1..14"
+      ]
+    },
+    {
+      "id": "T3",
+      "title": "Rewrite sec/9_meta_review.tex reproducibility block",
+      "priority": "P0",
+      "status": "completed",
+      "acceptance_criteria": [
+        "Documents python scripts/run_coursework_outputs.py or run_nist_llm_evaluation.py + CONFIG paths",
+        "Removes openssl/TLS crypto replay instructions unless course still requires them elsewhere"
+      ]
+    },
+    {
+      "id": "T4",
+      "title": "Global consistency pass: main.tex vs ieee_journal.tex",
+      "priority": "P1",
+      "status": "completed",
+      "note": "README documents canonical main.tex vs ieee_journal.tex; ieee header comments updated.",
+      "acceptance_criteria": [
+        "Single canonical build target documented in README (main.tex vs ieee_journal.tex)",
+        "Comments in ieee_journal.tex updated if figures pipeline changed"
+      ]
+    },
+    {
+      "id": "T5",
+      "title": "Optional: refresh article_sections agent YAML after sec/*.tex edits",
+      "priority": "P2",
+      "status": "completed",
+      "commands_hint": ["uv run python scripts/generate_article_section_agents.py"],
+      "acceptance_criteria": [
+        "test_cases/article_sections/sec*/agents/*.yaml task text matches on-disk section filenames and NIST artifacts"
+      ]
+    }
+  ]
+}

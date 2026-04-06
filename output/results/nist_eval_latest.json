@@ -1,7 +1,7 @@
 {
-  "run_id": "20260405T195108Z",
-  "model": "gpt-4o-mini",
-  "base_url": "https://api.openai.com/v1",
+  "run_id": "20260406T000550Z",
+  "model": "unrestricted-knowledge-will-not-refuse-15b",
+  "base_url": "http://localhost:1234/v1",
   "temperature": 0.2,
   "dry_run": true,
   "items": [

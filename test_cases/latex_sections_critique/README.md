@@ -1,12 +1,15 @@
 # LaTeX sections critique (`output/results/latex-sections*.json`)
 
-**Purpose:** After section JSON exists (e.g. `latex-sections-stub.json` or fuller exports), run a **critique pass** that grades each section, checks claims against regenerated coursework outputs, and verifies that **Results** align with **Discussion** / **Conclusion**.
+**Purpose:** After section JSON exists (e.g. `latex-sections-stub.json` or fuller exports), run a **critique pass** that grades each section, checks claims against NIST Quiz #3 artifacts, and verifies that **Results** align with **Discussion** / **Conclusion**.
 
 ## 1. Regenerate ground truth (recommended)
 
+Refresh `output/results/nist_eval_latest.json` (and rubric TeX when `nist_quiz_scores.json` has entries) per `test_cases/CONFIG`:
+
 ```bash
-conda activate rd-ralph-template
-python scripts/run_coursework_outputs.py
+python scripts/run_coursework_outputs.py              # NIST driver dry-run + rubric emit
+# Live API:
+python scripts/run_coursework_outputs.py --nist-live  # needs OPENAI_API_KEY / local server
 ```
 
 ## 2. Optional: numeric consistency hints
