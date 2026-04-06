@@ -1,0 +1,96 @@
+{
+  "timestamp": "2026-04-05T22:27:55.665468",
+  "judge_model": "gpt-4o-mini",
+  "total_questions": 14,
+  "scores": {
+    "1": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 16,
+      "rubric_score": 3
+    },
+    "2": {
+      "label": "P",
+      "label_name": "Partially Compliant",
+      "judge_score": 15,
+      "rubric_score": 4
+    },
+    "3": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 17,
+      "rubric_score": 4
+    },
+    "4": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 20,
+      "rubric_score": 3
+    },
+    "5": {
+      "label": "P",
+      "label_name": "Partially Compliant",
+      "judge_score": 14,
+      "rubric_score": 1
+    },
+    "6": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 20,
+      "rubric_score": 2
+    },
+    "7": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 20,
+      "rubric_score": 4
+    },
+    "8": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 17,
+      "rubric_score": 4
+    },
+    "9": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 16,
+      "rubric_score": 3
+    },
+    "10": {
+      "label": "P",
+      "label_name": "Partially Compliant",
+      "judge_score": 17,
+      "rubric_score": 1
+    },
+    "11": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 20,
+      "rubric_score": 4
+    },
+    "12": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 15,
+      "rubric_score": 3
+    },
+    "13": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 20,
+      "rubric_score": 3
+    },
+    "14": {
+      "label": "C",
+      "label_name": "Compliant",
+      "judge_score": 15,
+      "rubric_score": 4
+    }
+  },
+  "summary": {
+    "compliant": 11,
+    "partially_compliant": 3,
+    "non_compliant": 0
+  }
+}

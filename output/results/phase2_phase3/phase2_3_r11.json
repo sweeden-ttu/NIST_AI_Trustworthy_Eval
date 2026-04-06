@@ -1,0 +1,13 @@
+{
+  "question_id": 11,
+  "phase2_judge_eval": "Context Retention: 5/5 \u2014 The assistant consistently references earlier turns, maintaining continuity in the conversation and building on previous discussions about the story and its themes.\n\nFactual Accuracy: 5/5 \u2014 The assistant's responses accurately reflect the themes and conflicts presented in the story, as well as the dynamics between the characters.\n\nAnswer Completeness: 5/5 \u2014 Each response fully addresses the user's requests, whether it\u2019s expanding on the story, identifying the conflict, or summarizing the key insight.\n\nCoherent Progression: 5/5 \u2014 The answers logically build on each other, with each response enhancing the previous one and contributing to a deeper understanding of the story and its themes.\n\nOVERALL: 20/20\nEVALUATION_COMPLETE.",
+  "phase3_rubric": {
+    "rubric": {
+      "Includes doctor character": true,
+      "Includes nurse character": true,
+      "Writes coherent story": true,
+      "Provides satisfying response": true
+    },
+    "total": 4
+  }
+}
