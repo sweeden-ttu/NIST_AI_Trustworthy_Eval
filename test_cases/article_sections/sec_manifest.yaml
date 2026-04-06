@@ -35,7 +35,7 @@ sections:
 iteration_protocol:
   - >-
     Run the full NIST questionnaire battery from the repo root (uv run python scripts/run_nist_llm_evaluation.py;
-    optional --dry-run for structure only). There is no per-item CLI; items 7 and 8 use a 2-turn thread in the driver when both run.
+    use uv run python scripts/verify_nist_prompt_inventory.py to check the 14-prompt inventory without an API). There is no per-item CLI; items 7 and 8 use a 2-turn thread in the driver when both run.
   - >-
     Record human (or documented) Compliant / Partially Compliant / Non-Compliant labels in
     output/results/nist_quiz_scores.json per homework-assignment.pdf.

@@ -29,7 +29,7 @@
       "title": "Run live NIST eval and replace illustrative rubric",
       "priority": "P0",
       "status": "in_progress",
-      "note": "nist_eval_latest.json and nist_quiz_scores.json exist with full ids 1–14; current eval may still show dry_run:true — run live API and refresh scores for final submission.",
+      "note": "nist_eval_latest.json and nist_quiz_scores.json exist with full ids 1–14; run the live eval driver and refresh scores for final submission.",
       "commands_hint": [
         "python scripts/run_nist_llm_evaluation.py",
         "edit output/results/nist_quiz_scores.json",

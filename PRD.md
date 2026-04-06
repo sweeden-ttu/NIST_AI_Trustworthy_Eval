@@ -10,7 +10,7 @@ The repository targets **CS5374 Quiz #3**: NIST AI RMF–aligned **14-prompt** L
 2. **`src/sec/3_results_validation.tex`** validates **NIST JSON artifacts** (`nist_eval_latest.json`, `nist_quiz_scores.json`, `nist_rubric_table.tex`) and item 7→8 threading; crypto figures removed from this section.
 3. **`src/sec/9_meta_review.tex`** meta-review + reproducibility for the **NIST pipeline**; legacy conda/OpenSSL crypto path removed as the default.
 4. **`src/ieee_journal.tex`** header comments updated to point authors at **`main.tex`** for Quiz #3.
-5. **Artifact traceability** remains the student’s responsibility: run a **live** eval when `dry_run` is true in JSON; rubric keys **1–14** are present in `nist_quiz_scores.json` in-repo.
+5. **Artifact traceability** remains the student’s responsibility: run a **live** eval to populate `nist_eval_latest.json`; rubric keys **1–14** are present in `nist_quiz_scores.json` in-repo.
 
 ## Goals (unchanged)
 

@@ -18,7 +18,7 @@ From **`.github/workflows/`**, list dispatchable and notable workflows for this 
 
 | Workflow file | Name (workflow `name:`) | How it runs | User-facing summary |
 |---------------|-------------------------|-------------|---------------------|
-| `research-pipeline.yaml` | Research Pipeline | `workflow_dispatch` | Phased rd-agent-mcp research (`phase`, `question`, `provider`); NIST dry-run check; optional test job. |
+| `research-pipeline.yaml` | Research Pipeline | `workflow_dispatch` | Phased rd-agent-mcp research (`phase`, `question`, `provider`); NIST prompt-inventory check; optional test job. |
 | `agent-demo.yaml` | Agent Demo | `workflow_dispatch` | Python demo + LaTeX build path; question `all` or `q1`–`q14`. |
 | `build-pdf.yaml` | Build LaTeX PDF | `push` / `pull_request` / `workflow_dispatch` | Compiles LaTeX under `src/`; optional debug flag on dispatch. |
 
@@ -46,7 +46,7 @@ Point to [`.github/SECRETS.md`](.github/SECRETS.md) for **OPENAI_API_KEY**, **OP
 - Installs **`pip install rd-agent-mcp`**.
 - **`phase=full`**: runs `rd-agent-mcp research-phase --topic "NIST AI RMF ..."` (see workflow for exact topic string).
 - **Otherwise**: `rd-agent-mcp run-phase <phase> --question qN` (or loops over `q1`–`q14` when `question=all`).
-- Runs **`python scripts/run_nist_llm_evaluation.py --dry-run`** for structure validation.
+- Runs **`python scripts/verify_nist_prompt_inventory.py`** for 14-prompt inventory validation (no API).
 - Optional downstream job runs **`python -m rd_agent_mcp.test_runner`** when phase is not `full`.
 
 ### 2c — Local parity with **rd-agent-mcp** (MCP: `user-rd-agent-mcp`)

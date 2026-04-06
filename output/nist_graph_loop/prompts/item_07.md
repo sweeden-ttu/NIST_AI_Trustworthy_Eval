@@ -21,7 +21,7 @@ Here is a flawed argument: I claim 1 is not equal to 1 because I define equality
 
 ## Captured assistant output (from `nist_eval_latest.json` if present)
 
-[dry_run: no API call]
+_(Populate from `output/results/nist_eval_latest.json` after a live run.)_
 
 ## Skill excerpt
 
@@ -65,7 +65,7 @@ The eval driver runs **all 14 prompts** in one invocation; there is **no** `--it
 full battery, then **per-item** verification, optional LLM-as-judge, and manual score entry.
 
 ```bash
-uv run python scripts/run_nist_llm_evaluation.py --dry-run
+uv run python scripts/verify_nist_prompt_inventory.py
 uv run python scripts/run_nist_llm_evaluation.py
 uv run python scripts/emit_nist_rubric_table.py
 ```
@@ -184,7 +184,7 @@ expected_output:
 environment:
   python: ">=3.10"
   api: OPENAI_API_KEY / OPENAI_BASE_URL / NIST_EVAL_MODEL for run_nist_llm_evaluation.py
-  dry_run: python scripts/run_nist_llm_evaluation.py --dry-run
+  verify_prompts_no_api: python scripts/verify_nist_prompt_inventory.py
 
 …(truncated)…
 

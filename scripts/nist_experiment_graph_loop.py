@@ -225,19 +225,12 @@ def main() -> None:
     ap.add_argument(
         "--run-eval",
         action="store_true",
-        help="Run scripts/run_nist_llm_evaluation.py before the graph (needs OPENAI_API_KEY unless dry-run)",
-    )
-    ap.add_argument(
-        "--eval-dry-run",
-        action="store_true",
-        help="With --run-eval, pass --dry-run to the eval driver",
+        help="Run scripts/run_nist_llm_evaluation.py before the graph (needs OPENAI_API_KEY)",
     )
     args = ap.parse_args()
 
     if args.run_eval:
         cmd = [sys.executable, str(SCRIPTS / "run_nist_llm_evaluation.py")]
-        if args.eval_dry_run:
-            cmd.append("--dry-run")
         r = subprocess.run(cmd, cwd=str(REPO_ROOT))
         if r.returncode != 0:
             raise SystemExit(r.returncode)

@@ -29,8 +29,8 @@ Quick orientation for AI coding agents working in this repo. **End-to-end human 
 
 ## Execution surfaces (short)
 
-- **NIST battery**: `python scripts/run_nist_llm_evaluation.py` (`--dry-run` or live with env vars).
-- **Orchestrator**: `python scripts/run_coursework_outputs.py` ([`--nist-live`](scripts/run_coursework_outputs.py)).
+- **NIST battery**: `python scripts/run_nist_llm_evaluation.py` (requires `OPENAI_API_KEY`); inventory check: `python scripts/verify_nist_prompt_inventory.py`.
+- **Orchestrator**: `python scripts/run_coursework_outputs.py` (optional [`--skip-nist-eval`](scripts/run_coursework_outputs.py)).
 - **Judge prompt bundle**: `uv run --extra nist-loop python scripts/nist_experiment_graph_loop.py`.
 - **Regenerate article YAML agents**: `uv run python scripts/generate_article_section_agents.py`.
 - **MCP**: **`user-rd-agent-mcp`** in Cursor — read tool schemas under the IDE’s `mcps/user-rd-agent-mcp/tools/*.json` before calling tools.

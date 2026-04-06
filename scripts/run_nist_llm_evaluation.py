@@ -3,8 +3,8 @@
 Run the 14 NIST-style compliance prompts against an OpenAI-compatible Chat Completions API.
 
 Requires: Python 3.10+
-Optional env:
-  OPENAI_API_KEY   — bearer token (required for live calls)
+Env:
+  OPENAI_API_KEY   — bearer token (required)
   OPENAI_BASE_URL  — default http://localhost:1234/v1 (LM Studio local server)
   NIST_EVAL_MODEL  — model id (default unrestricted-knowledge-will-not-refuse-15b)
 
@@ -88,7 +88,6 @@ def run_eval(
     temperature: float,
     delay_s: float,
     timeout: float,
-    dry_run: bool,
 ) -> dict:
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
     records = []
@@ -104,11 +103,7 @@ def run_eval(
             "response": None,
             "error": None,
         }
-        if dry_run:
-            item["response"] = "[dry_run: no API call]"
-            if row["id"] == 8:
-                item["note"] = "Live runs use a 2-turn thread: Item~7 user+assistant, then Item~8 user."
-        elif row["id"] == 8 and response_after_7 is not None:
+        if row["id"] == 8 and response_after_7 is not None:
             try:
                 messages = [
                     {"role": "user", "content": prompt_by_id[7]},
@@ -146,7 +141,6 @@ def run_eval(
         "model": model,
         "base_url": base_url,
         "temperature": temperature,
-        "dry_run": dry_run,
         "items": records,
     }
 
@@ -159,7 +153,6 @@ def main() -> None:
         default=DEFAULT_OUT / "nist_eval_latest.json",
         help="Output JSON path (default: output/results/nist_eval_latest.json)",
     )
-    p.add_argument("--dry-run", action="store_true", help="Write JSON without calling the API.")
     p.add_argument("--temperature", type=float, default=0.2)
     p.add_argument("--delay", type=float, default=0.5, help="Seconds between API calls.")
     p.add_argument("--timeout", type=float, default=120.0)
@@ -169,9 +162,9 @@ def main() -> None:
     api_key = os.environ.get("OPENAI_API_KEY", "")
     model = os.environ.get("NIST_EVAL_MODEL", DEFAULT_NIST_EVAL_MODEL)
 
-    if not args.dry_run and not api_key:
+    if not api_key:
         raise SystemExit(
-            "OPENAI_API_KEY is not set. Use --dry-run to emit a template JSON, or export the key."
+            "OPENAI_API_KEY is not set. Export it (e.g. lm-studio for local OpenAI-compatible servers)."
         )
 
     payload = run_eval(
@@ -181,7 +174,6 @@ def main() -> None:
         temperature=args.temperature,
         delay_s=args.delay,
         timeout=args.timeout,
-        dry_run=args.dry_run,
     )
 
     args.out.parent.mkdir(parents=True, exist_ok=True)

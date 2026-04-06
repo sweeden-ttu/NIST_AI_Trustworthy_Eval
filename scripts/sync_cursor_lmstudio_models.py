@@ -145,7 +145,7 @@ def main() -> int:
         / "Library/Application Support/Cursor/User/globalStorage/state.vscdb",
         help="Path to Cursor state.vscdb",
     )
-    p.add_argument("--dry-run", action="store_true", help="Print planned changes; do not write DB")
+    p.add_argument("--no-write", action="store_true", help="Print planned changes; do not write DB")
     p.add_argument("--backup", action="store_true", help="Copy state.vscdb to .bak-lmstudio-sync before write")
     args = p.parse_args()
     base = args.base_url.rstrip("/")
@@ -214,8 +214,8 @@ def main() -> int:
     print(f"modelOverrideEnabled +{len(added_moe)}: {added_moe or '(none new)'}")
     print(f"openAIBaseUrl -> {data['openAIBaseUrl']}")
 
-    if args.dry_run:
-        print("dry-run: no write")
+    if args.no_write:
+        print("no-write: skipping DB update")
         return 0
 
     if args.backup:

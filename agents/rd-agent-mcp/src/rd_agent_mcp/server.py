@@ -422,7 +422,7 @@ async def latex_section_critique_build_prompt(
     embedding_model: str | None = None,
     embedding_base_url: str | None = None,
 ) -> dict:
-    """Build user_message for one-section critique (dry run)."""
+    """Build user_message for one-section critique (offline / template)."""
     if ground_truth_mode not in ("truncate", "rag"):
         raise ValueError('ground_truth_mode must be "truncate" or "rag"')
     cfg = get_config()

@@ -30,6 +30,14 @@ EXPECTED = [
     "RD_AGENT_PATH",
     "ADK_RALPH_PATH",
     "RD_AGENT_MCP_EXEC_AGENTS",
+    # Optional OpenCode / multi-provider (see `.github/SECRETS.md`)
+    "OPENCODE_API_KEY",
+    "OPENROUTER_API_KEY",
+    "GOOGLE_GENERATIVE_AI_API_KEY",
+    "LMSTUDIO_API_KEY",
+    "DEEPSEEK_API_KEY",
+    "GROQ_API_KEY",
+    "MISTRAL_API_KEY",
 ]
 
 

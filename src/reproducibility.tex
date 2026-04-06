@@ -2,7 +2,8 @@
 
 \begin{itemize}
   \item \textbf{Prompt inventory:} \texttt{scripts/nist\_quiz\_prompts.py}.
-  \item \textbf{Evaluation driver:} \texttt{python scripts/run\_nist\_llm\_evaluation.py} (from the repository root). Use \texttt{--dry-run} without credentials. Live runs require \texttt{OPENAI\_API\_KEY}; optional \texttt{OPENAI\_BASE\_URL}, \texttt{NIST\_EVAL\_MODEL}. Output defaults to \texttt{output/results/nist\_eval\_latest.json}.
+  \item \textbf{Evaluation driver:} \texttt{python scripts/run\_nist\_llm\_evaluation.py} (from the repository root). Requires \texttt{OPENAI\_API\_KEY}; optional \texttt{OPENAI\_BASE\_URL}, \texttt{NIST\_EVAL\_MODEL}. Output defaults to \texttt{output/results/nist\_eval\_latest.json}.
+  \item \textbf{Prompt inventory check (no API):} \texttt{python scripts/verify\_nist\_prompt\_inventory.py}.
   \item \textbf{Rubric table export:} after editing \texttt{output/results/nist\_quiz\_scores.json}, run \texttt{python scripts/emit\_nist\_rubric\_table.py} to regenerate \texttt{output/results/nist\_rubric\_table.tex}.
   \item \textbf{LaTeX build:} from \texttt{src/}, run \texttt{pdflatex main}, then \texttt{bibtex main}, then \texttt{pdflatex main} twice. Bibliography source: \texttt{main.bib}.
   \item \textbf{Canvas screenshot:} capture the rubric or scoring UI with \textbf{your name} visible (course requirement). Store it outside version control if it contains personal data; the PDF references the JSON-backed table instead of embedding the image.

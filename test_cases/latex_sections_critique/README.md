@@ -7,9 +7,8 @@
 Refresh `output/results/nist_eval_latest.json` (and rubric TeX when `nist_quiz_scores.json` has entries) per `test_cases/CONFIG`:
 
 ```bash
-python scripts/run_coursework_outputs.py              # NIST driver dry-run + rubric emit
-# Live API:
-python scripts/run_coursework_outputs.py --nist-live  # needs OPENAI_API_KEY / local server
+python scripts/run_coursework_outputs.py                 # live NIST driver + rubric when scores exist
+python scripts/run_coursework_outputs.py --skip-nist-eval  # manifest + rubric only
 ```
 
 ## 2. Optional: numeric consistency hints

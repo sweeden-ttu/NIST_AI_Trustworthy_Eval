@@ -9,9 +9,9 @@ The fourteen prompts collectively stress-test a single target model across \text
 \subsection*{Reproducibility (IEEE build)}
 Regenerate evaluation artifacts from the repository root:
 \begin{itemize}
-  \item \textbf{Structure check (no API key):} \texttt{python scripts/run\_nist\_llm\_evaluation.py --dry-run}
+  \item \textbf{Prompt inventory (no API key):} \texttt{python scripts/verify\_nist\_prompt\_inventory.py}
   \item \textbf{Live run:} set \texttt{OPENAI\_API\_KEY}, optional \texttt{OPENAI\_BASE\_URL}, \texttt{NIST\_EVAL\_MODEL}; then \texttt{python scripts/run\_nist\_llm\_evaluation.py}
-  \item \textbf{Orchestrated refresh:} \texttt{python scripts/run\_coursework\_outputs.py} (reads \texttt{test\_cases/CONFIG}; dry-run by default; \texttt{--nist-live} for API)
+  \item \textbf{Orchestrated refresh:} \texttt{python scripts/run\_coursework\_outputs.py} (reads \texttt{test\_cases/CONFIG}; runs the live NIST driver unless \texttt{--skip-nist-eval})
   \item \textbf{Rubric table:} edit \texttt{output/results/nist\_quiz\_scores.json}, then \texttt{python scripts/emit\_nist\_rubric\_table.py}
 \end{itemize}
 

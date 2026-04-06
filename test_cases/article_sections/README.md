@@ -7,7 +7,7 @@ YAML specs for **rd-agent** and **adk-ralph** that target each `\input{sec/...}`
 From the **repository root** (Python 3.10+; API key and base URL as in `scripts/run_nist_llm_evaluation.py`):
 
 ```bash
-uv run python scripts/run_nist_llm_evaluation.py --dry-run
+uv run python scripts/verify_nist_prompt_inventory.py
 uv run python scripts/run_nist_llm_evaluation.py
 ```
 

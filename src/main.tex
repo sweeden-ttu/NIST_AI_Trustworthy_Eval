@@ -2,10 +2,19 @@
 % Local style files natbib.sty / fancyhdr.sty are on the search path (same directory).
 \documentclass[11pt]{article}
 
+% Times / Times-derived text + matching math (common in engineering & CS proceedings)
+\usepackage{newtxtext,newtxmath}
 \usepackage[margin=1in]{geometry}
 \setlength{\headheight}{14pt}
+% Unnumbered section headings; entries still go to the PDF outline / bookmarks
+\setcounter{secnumdepth}{0}
+% First paragraph after each sectional heading is indented like the rest of the body
+\usepackage{indentfirst}
+\setlength{\parindent}{1.5em}
+\setlength{\parskip}{0pt plus 1pt}
+
 \usepackage{graphicx}
-\usepackage{amsmath,amssymb}
+\usepackage{amsmath}
 \usepackage{booktabs}
 \usepackage{hyperref}
 \usepackage{fancyhdr}

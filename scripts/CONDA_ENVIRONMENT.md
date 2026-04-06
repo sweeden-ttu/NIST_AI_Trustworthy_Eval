@@ -27,7 +27,7 @@ conda activate NIST_AI_Trustworthy_Eval
 cd /path/to/NIST_AI_Trustworthy_Eval
 
 # No API / no LM Studio: validates JSON shape for all 14 items
-python scripts/run_nist_llm_evaluation.py --dry-run
+python scripts/verify_nist_prompt_inventory.py
 
 # Live run: start LM Studio (or other OpenAI-compatible server), then:
 export OPENAI_API_KEY=lm-studio   # or your provider token

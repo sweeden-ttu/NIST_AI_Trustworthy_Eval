@@ -123,10 +123,8 @@ jobs:
         run: |
           pip install autogen-agentchat autogen-core "autogen-ext[openai,ollama]" openai python-dotenv
 
-      - name: Verify NIST 14-prompt template (dry run)
-        run: |
-          python scripts/run_nist_llm_evaluation.py --dry-run --out output/results/nist_eval_agent_demo_dry.json
-          python -c "import json; from pathlib import Path; d=json.loads(Path('output/results/nist_eval_agent_demo_dry.json').read_text(encoding='utf-8')); ids=sorted(x.get('id') for x in d.get('items',[])); assert ids==list(range(1,15)), ids; print('OK: 14 NIST items present')"
+      - name: Verify NIST 14-prompt inventory (no API)
+        run: python scripts/verify_nist_prompt_inventory.py
 
       - name: Ensure phase-1 histories exist
         id: check_phase1

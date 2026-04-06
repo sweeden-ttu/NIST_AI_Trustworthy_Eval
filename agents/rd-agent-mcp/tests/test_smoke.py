@@ -1,4 +1,4 @@
-"""Smoke tests: imports and dry-run agent graph helpers."""
+"""Smoke tests: imports and agent graph helpers."""
 
 import asyncio
 import os

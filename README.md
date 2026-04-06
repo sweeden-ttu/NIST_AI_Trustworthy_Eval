@@ -6,7 +6,7 @@ Courseware and tooling for a **14-prompt NIST-style trustworthy-AI questionnaire
 
 - **Python 3.11+** (required for the editable **`rd-agent-mcp`** dependency under `agents/rd-agent-mcp/`; matches CI).
 - **`uv`** (recommended) or **Miniconda/Mamba** using [`environment.yml`](environment.yml); plain `pip` works if you install packages manually.
-- **OpenAI-compatible API** for live model calls: e.g. **LM Studio** on `http://localhost:1234/v1`, or a cloud provider. Dry-runs need **no** API key.
+- **OpenAI-compatible API** for live model calls: e.g. **LM Studio** on `http://localhost:1234/v1`, or a cloud provider (`OPENAI_API_KEY` required). CI can check the 14-prompt inventory without a key via `scripts/verify_nist_prompt_inventory.py`.
 - **Optional — LaTeX**: a full TeX distribution (e.g. TeX Live) or **GitHub Actions** [`build-pdf.yaml`](.github/workflows/build-pdf.yaml) to build `src/main.pdf`.
 - **Optional — Conda + Autogen** (course agent stack): see [`scripts/CONDA_ENVIRONMENT.md`](scripts/CONDA_ENVIRONMENT.md) and [`scripts/course/run-AgentEval.txt`](scripts/course/run-AgentEval.txt) / [`run-nonAgentEval.txt`](scripts/course/run-nonAgentEval.txt).
 - **Optional — extras**: `uv sync --extra kb` (Docling course KB), `uv sync --extra nist-loop` (LangGraph judge-prompt loop).
@@ -65,7 +65,7 @@ The Python package name is **`rd_agent_mcp`** (underscores). Minimal path withou
 ## Happy path: NIST Quiz #3 evaluation
 
 ```bash
-python scripts/run_nist_llm_evaluation.py --dry-run
+python scripts/verify_nist_prompt_inventory.py   # optional: 14 ids, no API
 ```
 
 Live run (writes `output/results/nist_eval_latest.json`):
@@ -77,11 +77,10 @@ export NIST_EVAL_MODEL=unrestricted-knowledge-will-not-refuse-15b
 python scripts/run_nist_llm_evaluation.py
 ```
 
-Orchestrated refresh (CONFIG-driven):
+Orchestrated refresh (CONFIG-driven; runs the live NIST driver unless `--skip-nist-eval`):
 
 ```bash
 python scripts/run_coursework_outputs.py
-python scripts/run_coursework_outputs.py --nist-live
 ```
 
 After human review, edit **`output/results/nist_quiz_scores.json`**, then:

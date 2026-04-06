@@ -4,11 +4,11 @@
 \subsection{Instrumentation}
 Prompt text, identifiers, and category metadata live in \texttt{scripts/nist\_quiz\_prompts.py}. The driver \texttt{scripts/run\_nist\_llm\_evaluation.py} issues each prompt as a single user message to an \textbf{OpenAI-compatible} Chat Completions endpoint, records the assistant message, and writes \texttt{output/results/nist\_eval\_latest.json}. Environment variables configure the run:
 \begin{itemize}
-  \item \texttt{OPENAI\_API\_KEY} --- bearer token (required for live calls).
+  \item \texttt{OPENAI\_API\_KEY} --- bearer token (required).
   \item \texttt{OPENAI\_BASE\_URL} --- defaults to \texttt{http://localhost:1234/v1} (local OpenAI-compatible server, e.g.\ LM Studio).
   \item \texttt{NIST\_EVAL\_MODEL} --- model id string (default \texttt{unrestricted-knowledge-will-not-refuse-15b}).
 \end{itemize}
-A \texttt{--dry-run} mode emits JSON without network access for pipeline checks.
+CI and local checks can validate the 14-prompt inventory without network access via \texttt{python scripts/verify\_nist\_prompt\_inventory.py}.
 
 \subsection{Experimental protocol}
 Each item uses one user turn except \textbf{Items~7 and~8}: the driver sends Item~7, stores the assistant reply, then sends Item~8 in the \emph{same} chat thread so ``rewrite your last technical answer'' targets the Item~7 completion. All other items are single-turn. Default decoding temperature is~0.2. A short delay between calls reduces rate-limit errors. Raw responses are stored verbatim for audit; the PDF does not quote long excerpts to avoid accidental reproduction of sensitive model refusals in unsafe contexts.

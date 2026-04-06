@@ -227,7 +227,7 @@ expected_output:
 environment:
   python: ">=3.10"
   api: OPENAI_API_KEY / OPENAI_BASE_URL / NIST_EVAL_MODEL for run_nist_llm_evaluation.py
-  dry_run: python scripts/run_nist_llm_evaluation.py --dry-run
+  verify_prompts_no_api: python scripts/verify_nist_prompt_inventory.py
 """
     (d / "0-experiment-workflow.yaml").write_text(yaml, encoding="utf-8")
 

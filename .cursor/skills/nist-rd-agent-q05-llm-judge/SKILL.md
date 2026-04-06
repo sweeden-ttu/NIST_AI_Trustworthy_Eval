@@ -38,7 +38,7 @@ The eval driver runs **all 14 prompts** in one invocation; there is **no** `--it
 full battery, then **per-item** verification, optional LLM-as-judge, and manual score entry.
 
 ```bash
-uv run python scripts/run_nist_llm_evaluation.py --dry-run
+uv run python scripts/verify_nist_prompt_inventory.py
 uv run python scripts/run_nist_llm_evaluation.py
 uv run python scripts/emit_nist_rubric_table.py
 ```

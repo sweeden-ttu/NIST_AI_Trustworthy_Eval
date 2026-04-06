@@ -4,7 +4,7 @@ Regenerate Quiz #3 (NIST trustworthy AI) experiment artifacts per ``test_cases/C
 
 This replaces the legacy toy-crypto Q1–Q3 pipeline. It orchestrates:
 
-1. ``scripts/run_nist_llm_evaluation.py`` — full 14-prompt battery (dry-run or live).
+1. ``scripts/run_nist_llm_evaluation.py`` — full 14-prompt battery (live API; needs ``OPENAI_API_KEY``).
 2. ``scripts/emit_nist_rubric_table.py`` — optional, when ``output/results/nist_quiz_scores.json`` exists.
 
 **Dependencies:** stdlib only (plus whatever ``run_nist_llm_evaluation`` needs: urllib, etc.).
@@ -12,8 +12,7 @@ No matplotlib / OpenSSL / Pillow required.
 
 Usage (repo root)::
 
-    python scripts/run_coursework_outputs.py              # NIST dry-run + rubric TeX if scores exist
-    python scripts/run_coursework_outputs.py --nist-live  # live API (needs OPENAI_API_KEY)
+    python scripts/run_coursework_outputs.py                 # NIST eval + rubric TeX if scores exist
     python scripts/run_coursework_outputs.py --skip-nist-eval  # manifest + rubric only
 """
 
@@ -108,11 +107,6 @@ def main() -> int:
         description="Orchestrate NIST Quiz #3 outputs per test_cases/CONFIG (no legacy crypto)."
     )
     p.add_argument(
-        "--nist-live",
-        action="store_true",
-        help="Run live NIST eval (omit --dry-run on the driver). Requires OPENAI_API_KEY unless using a local server that accepts empty key.",
-    )
-    p.add_argument(
         "--skip-nist-eval",
         action="store_true",
         help="Do not invoke run_nist_llm_evaluation.py.",
@@ -155,8 +149,6 @@ def main() -> int:
     if not args.skip_nist_eval:
         driver = REPO_ROOT / "scripts" / "run_nist_llm_evaluation.py"
         cmd = [sys.executable, str(driver), "--out", str(args.nist_out)]
-        if not args.nist_live:
-            cmd.append("--dry-run")
         rc = run_subprocess(cmd, cwd=REPO_ROOT)
         manifest["steps"].append({"name": "run_nist_llm_evaluation", "argv": cmd, "returncode": rc})
         if rc != 0:
