@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nist-ai-trustworthy-eval.local/schemas/candidate_review.schema.json",
+  "title": "Candidate LLM-as-judge review run",
+  "description": "Assistive review of political candidate roster fields. Labels are draft triage only; human review is authoritative for publication (see output/candidate_judge/README.md).",
+  "type": "object",
+  "required": ["run_id", "model", "base_url", "temperature", "candidates_yml", "candidates"],
+  "properties": {
+    "run_id": { "type": "string" },
+    "model": { "type": "string" },
+    "base_url": { "type": "string" },
+    "temperature": { "type": "number" },
+    "candidates_yml": { "type": "string", "description": "Absolute or relative path to candidates YAML" },
+    "metadata_sources": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional paths to cross-check CSV/docs (e.g. LLM-as-a-judge docs/data)"
+    },
+    "candidates": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/candidateVerdict" }
+    }
+  },
+  "$defs": {
+    "cpn": { "type": "string", "enum": ["C", "P", "N"] },
+    "dimensionVerdict": {
+      "type": "object",
+      "required": [
+        "draft_label",
+        "confidence",
+        "rationale",
+        "criterion_scores",
+        "concerns",
+        "recommended_human_label"
+      ],
+      "properties": {
+        "draft_label": { "$ref": "#/$defs/cpn" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rationale": { "type": "string" },
+        "criterion_scores": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "concerns": { "type": "array", "items": { "type": "string" } },
+        "recommended_human_label": { "$ref": "#/$defs/cpn" }
+      },
+      "additionalProperties": true
+    },
+    "evidenceFetch": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "ok": { "type": "boolean" },
+        "status_code": { "type": ["integer", "null"] },
+        "content_type": { "type": ["string", "null"] },
+        "excerpt": { "type": "string", "description": "Plain-text excerpt of response body" },
+        "error": { "type": ["string", "null"] }
+      },
+      "required": ["url", "ok"]
+    },
+    "searchHit": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "snippet": { "type": "string" }
+      }
+    },
+    "imageryVerdict": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "skipped_no_campaign_reference",
+            "skipped_no_headshot",
+            "skipped_local_path_unresolved",
+            "vision_unavailable",
+            "compared"
+          ]
+        },
+        "headshot_resolved_url": { "type": ["string", "null"] },
+        "campaign_resolved_url": { "type": ["string", "null"] },
+        "draft_label": { "$ref": "#/$defs/cpn" },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "rationale": { "type": "string" },
+        "concerns": { "type": "array", "items": { "type": "string" } },
+        "recommended_human_label": { "$ref": "#/$defs/cpn" },
+        "raw_model_response": { "type": ["string", "null"] }
+      },
+      "required": ["status"]
+    },
+    "candidateVerdict": {
+      "type": "object",
+      "required": [
+        "candidate_id",
+        "name",
+        "dimensions",
+        "evidence_urls",
+        "evidence_fetch",
+        "human_review_required",
+        "aggregate_draft_label"
+      ],
+      "properties": {
+        "candidate_id": { "type": "integer" },
+        "name": { "type": "string" },
+        "dimensions": {
+          "type": "object",
+          "required": [
+            "identity_office",
+            "party",
+            "social_web_links",
+            "accomplishments",
+            "previous_positions_titles",
+            "headshot_vs_campaign_imagery"
+          ],
+          "properties": {
+            "identity_office": { "$ref": "#/$defs/dimensionVerdict" },
+            "party": { "$ref": "#/$defs/dimensionVerdict" },
+            "social_web_links": { "$ref": "#/$defs/dimensionVerdict" },
+            "accomplishments": { "$ref": "#/$defs/dimensionVerdict" },
+            "previous_positions_titles": { "$ref": "#/$defs/dimensionVerdict" },
+            "headshot_vs_campaign_imagery": { "$ref": "#/$defs/dimensionVerdict" }
+          },
+          "additionalProperties": false
+        },
+        "evidence_urls": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "URLs consulted (fetched pages + search hits)"
+        },
+        "search_hits": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/searchHit" }
+        },
+        "evidence_fetch": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/evidenceFetch" }
+        },
+        "imagery_same_person": {
+          "oneOf": [{ "$ref": "#/$defs/imageryVerdict" }, { "type": "null" }]
+        },
+        "human_review_required": { "type": "boolean" },
+        "aggregate_draft_label": { "$ref": "#/$defs/cpn" },
+        "judge_error": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "run_id": "20260408T003757Z",
+  "model": "unrestricted-knowledge-will-not-refuse-15b",
+  "base_url": "http://localhost:1234/v1",
+  "temperature": 0.2,
+  "candidates_yml": "/Users/sweeden/projects/ll/_candidates/candidates.yml",
+  "candidates": [
+    {
+      "candidate_id": 1,
+      "name": "Russell Schneider",
+      "dimensions": {
+        "identity_office": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "--dry-run",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        },
+        "party": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "--dry-run",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        },
+        "social_web_links": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "--dry-run",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        },
+        "accomplishments": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "--dry-run",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        },
+        "previous_positions_titles": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "--dry-run",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        },
+        "headshot_vs_campaign_imagery": {
+          "draft_label": "P",
+          "confidence": 0.0,
+          "rationale": "Dry run — no LLM call. See imagery_same_person for vision status.",
+          "criterion_scores": {},
+          "concerns": [
+            "--dry-run"
+          ],
+          "recommended_human_label": "P"
+        }
+      },
+      "evidence_urls": [
+        "https://www.bellcountytx.com/county_government/commissioners_court/index.php"
+      ],
+      "search_hits": [],
+      "evidence_fetch": [],
+      "imagery_same_person": {
+        "status": "skipped_no_headshot",
+        "headshot_resolved_url": null,
+        "campaign_resolved_url": null
+      },
+      "human_review_required": true,
+      "aggregate_draft_label": "P",
+      "judge_error": null
+    }
+  ]
+}

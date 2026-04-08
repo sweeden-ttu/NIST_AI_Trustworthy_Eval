@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1775444983.49664 "main.aux" "main.bbl" "main" 1775444984.5074 0
+["bibtex main"] 1775446750.71403 "main.aux" "main.bbl" "main" 1775446751.80233 0
   "./main.bib" 1775441344.48395 13136 d567b44153ccda51ac2714e0f67c5123 ""
   "/usr/local/texlive/2025/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1775444984.21631 6152 648354caf3440622a9eb089b1b68d86c "pdflatex"
+  "main.aux" 1775446751.50027 6152 648354caf3440622a9eb089b1b68d86c "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1775444983.61029 "main.tex" "main.pdf" "main" 1775444984.50756 0
-  "../output/results/nist_rubric_table.tex" 1775434317.44847 771 2eeec62eb279ce50da5e6593ea47422b ""
+["pdflatex"] 1775446750.83733 "main.tex" "main.pdf" "main" 1775446751.80251 0
+  "../output/results/nist_rubric_table.tex" 1775446750.64047 771 2eeec62eb279ce50da5e6593ea47422b ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/newtx/ntx-ot1-tlf.enc" 1422827479 2083 60e36f8eac802fcaf19eabe2633b406e ""
   "/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/tex-gyre/q-ts1.enc" 1529098226 3124 3813fd4c981d99822890a2861b0d274c ""
   "/usr/local/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -148,9 +148,9 @@
   "experiment.tex" 1775441344.48386 15542 ef8662e28e1b23e9e428d416b2ba69b5 ""
   "fancyhdr.sty" 1775417512.38998 20556 a72840ffe9291c3f32b01faf9979be79 ""
   "intro_zyf.tex" 1775441344.48389 2193 85e743f36db5111d468221d37ab82ca4 ""
-  "main.aux" 1775444984.21631 6152 648354caf3440622a9eb089b1b68d86c "pdflatex"
-  "main.bbl" 1775444983.60758 1119 d195550f97bfcb1b3fb4815beb23a316 "bibtex main"
-  "main.out" 1775444984.21684 4931 1fbbd09c569c37e939d7f074ac860142 "pdflatex"
+  "main.aux" 1775446751.50027 6152 648354caf3440622a9eb089b1b68d86c "pdflatex"
+  "main.bbl" 1775446750.83628 1119 d195550f97bfcb1b3fb4815beb23a316 "bibtex main"
+  "main.out" 1775446751.50111 4931 1fbbd09c569c37e939d7f074ac860142 "pdflatex"
   "main.tex" 1775444914.91958 3292 ab1f36d9d57ebc57fcd685b10d3bfd90 ""
   "method_zyf.tex" 1775444254.27262 2492 05fca1867cd3951278ac34a65f9652ef ""
   "natbib.sty" 1775417512.40614 45154 40088ce024445d7ee2bca59e704cdd01 ""

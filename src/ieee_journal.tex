@@ -1,56 +1,109 @@
-% IEEEtran multi-author / peer-review layout (legacy cryptography-themed title/abstract).
-% For CS5374 Quiz #3 (NIST trustworthy-AI evaluation), the canonical write-up is src/main.tex.
-% This file remains for IEEE-style section drills; sec/3 and sec/9 are aligned with NIST JSON artifacts.
-% Build: pdflatex or latexmk from this directory; requires IEEEtran (e.g. texlive-publishers).
 \documentclass[conference]{IEEEtran}
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
-\usepackage{graphicx}
 \usepackage{url}
-\input{review_macros}
 \usepackage{hyperref}
-
-% Optional figures: legacy crypto diagrams under ../output/diagrams/ (not required for NIST Quiz #3).
-\graphicspath{{../output/diagrams/}}
-
 \hypersetup{hidelinks}
 
-\title{Experimental Analysis of AES Diffusion, Block Cipher Modes, and TLS Cipher Suites}
+\title{Toward a Quantifiable Philosophy of Human Measurement:\\
+Bias, Compliance, and the Not-Computable Gate in LLM Adjudication}
 
 \author{
-\IEEEauthorblockN{Author Name}
-\IEEEauthorblockA{\textit{Department} \\
-\textit{University}\\
-email@domain}
+\IEEEauthorblockN{Student Researcher}
+\IEEEauthorblockA{
+Department of Computer Science\\
+Software Verification and Validation\\
+email@domain
+}
 }
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-We present an empirical study seeded by structured cryptography coursework, extending assignment questions into reproducible experiments suitable for archival reporting. We measure AES round-by-round avalanche behavior under controlled modifications (ShiftRows and MixColumns variants), compare ECB and CBC mode leakage on structured bitmap data, and summarize TLS cipher suite negotiations from a small browser and website sample. We discuss limitations, reproducibility, and relation to standardization practice.
+This paper proposes a quantifiable philosophy of human measurement through the lens of a biased large language model (LLM) assistant acting in a judge-and-jury role. We argue that many current governance pipelines conflate four distinct categories: ethics, bias, compliance, and computability. We introduce a logical boundary condition, the not-computable gate, to mark questions that cannot be validly reduced to model-only scoring without human interpretive authority. We then state a hypothesis: confusion among these categories contributes to the LLM hallucination problem by forcing systems to answer beyond their epistemic and normative scope. As a practical response, we outline a bicameral urgency model for adjudication and a rubric-driven human query protocol that asks whether a subject self-identifies as human or robotic, not as a biometric classifier but as a governance checkpoint for role accountability. The manuscript closes with a research agenda for philosophers, jurists, and legal technologists and a call to return standards negotiations to first principles of measurement validity.
 \end{abstract}
 
 \begin{IEEEkeywords}
-AES, avalanche effect, block cipher modes, ECB, CBC, TLS, cipher suites, reproducibility
+bias, ethics, compliance, hallucination, LLM governance, human measurement, verification and validation
 \end{IEEEkeywords}
 
-% --- Body (same \input order as CVPR_1494/main.tex in the reference template) ---
-\input{sec/0_abstract}
-\input{sec/1_technical_contribution}
-\input{sec/2_experimental_methodology}
-\input{sec/3_results_validation}
-\input{sec/4_literature_review}
-\input{sec/5_presentation_clarity}
-\input{sec/6_detailed_comments}
-\input{sec/7_questions_authors}
-\input{sec/8_minor_issues}
-\input{sec/9_meta_review}
+\section{Introduction}
+A computer model assistant that presents itself as neutral can still be structurally biased by training data, policy layers, and objective-function shortcuts. When that assistant is operationally positioned as both judge and jury, its outputs may be mistaken for settled truth rather than probabilistic synthesis. This paper frames that mistake as a measurement problem.
+
+The proposed thesis is that current AI-governance practice often compresses non-equivalent concepts into a single scorecard. Ethics asks what should be done; bias asks who is advantaged or harmed; compliance asks what rules are followed; computation asks what can be represented and optimized. A unified score without category separation produces brittle confidence.
+
+\section{Proposed Philosophy of Human Measurement}
+The proposed philosophy has three pillars.
+
+\subsection{Construct Clarity}
+Each metric must declare what human construct it claims to represent and what it excludes. If a metric cannot state its boundary conditions, it should be treated as descriptive telemetry, not normative evidence.
+
+\subsection{Dual Evidence}
+Every claim must include both computational evidence (model traces, confidence intervals, perturbation stability) and interpretive evidence (human rationale, legal context, moral justification).
+
+\subsection{Role Accountability}
+Systems should identify whether a decision is machine-proposed, human-reviewed, or human-decided. This prevents category error in which model outputs are interpreted as final adjudication.
+
+\section{The Not-Computable Gate}
+We define a not-computable gate as a formal stopping condition:
+\begin{quote}
+If a question requires irreducible human interpretation, contested value judgment, or context unavailable to the system, automated adjudication must halt and route to human deliberation.
+\end{quote}
+
+The gate does not reject computation; it bounds computation. In verification and validation terms, it is a safety interlock for domain-overreach.
+
+\section{Hypothesis: Category Confusion Drives Hallucination}
+Hypothesis H1: the hallucination rate in high-stakes legal and ethical prompts increases when systems are forced to answer across mixed categories (ethics, bias, compliance, computability) without an explicit not-computable gate.
+
+Hypothesis H2: requiring category declaration before generation reduces hallucination severity by narrowing claim scope and increasing abstention where appropriate.
+
+Both hypotheses are testable through controlled prompt batteries, adversarial paraphrase sets, and human adjudication panels.
+
+\section{Bicameral Unbiased Quantification of Urgency}
+We propose a bicameral urgency model with two independent chambers:
+\begin{itemize}
+    \item \textbf{Chamber A: Technical risk quantification} (error propagation, uncertainty, confidence decay, distribution shift).
+    \item \textbf{Chamber B: Human consequence quantification} (rights impact, legal exposure, social harm asymmetry, reversibility).
+\end{itemize}
+
+A decision escalates when either chamber crosses a threshold. This ``max-of-two'' design avoids false reassurance from low technical risk in high human-impact scenarios.
+
+\section{Human Query Rubric: Human or Robot Self-Identification}
+We propose a rubric where the system asks explicit accountability questions before high-impact actions:
+\begin{enumerate}
+    \item Do you identify yourself as a human decision-maker, an automated agent, or a mixed workflow?
+    \item What authority are you exercising: advisory, administrative, legal, or none?
+    \item Can you provide accountable reasons that are reviewable by another human?
+\end{enumerate}
+
+The goal is not personhood detection. The goal is governance traceability: who is accountable, under what authority, and with what review path.
+
+\section{Institutional Call for Standards Negotiation}
+This manuscript adopts the phrase ``National Institute of Standards and Compliance'' as a rhetorical prompt for debate about standards institutions and measurement philosophy. It is not presented as an official renaming claim. The substantive call is to return to negotiated first principles:
+\begin{itemize}
+    \item separate ethics, bias, compliance, and computability in every benchmark;
+    \item formalize not-computable gates in deployment policy;
+    \item require auditable human override pathways;
+    \item publish uncertainty and abstention metrics as first-class outputs.
+\end{itemize}
+
+\section{Conclusion}
+The central claim is modest but urgent: when we ask an LLM to resolve questions that exceed computable representation, we should expect hallucination, overreach, and false legitimacy. A quantifiable philosophy of human measurement, combined with a not-computable gate and bicameral urgency scoring, offers a path toward technically disciplined and human-accountable assistants. The remaining questions belong jointly to philosophers, jurists, engineers, and legal technologists.
 
 \bibliographystyle{IEEEtran}
-\begin{thebibliography}{1}
-\bibitem{daemen2002design}
-J.~Daemen and V.~Rijmen, \textit{The Design of Rijndael: AES---The Advanced Encryption Standard}. Berlin: Springer, 2002.
+\begin{thebibliography}{4}
+\bibitem{nistairmf}
+NIST, ``Artificial Intelligence Risk Management Framework (AI RMF 1.0),'' 2023. [Online]. Available: \url{https://www.nist.gov/itl/ai-risk-management-framework}
+
+\bibitem{cronbach}
+L. J. Cronbach and P. E. Meehl, ``Construct validity in psychological tests,'' \emph{Psychological Bulletin}, vol. 52, no. 4, pp. 281--302, 1955.
+
+\bibitem{fairml}
+S. Barocas, M. Hardt, and A. Narayanan, \emph{Fairness and Machine Learning}. Cambridge, MA, USA: fairmlbook.org, 2019.
+
+\bibitem{ieee1012}
+IEEE Standard Association, ``IEEE Standard for System, Software, and Hardware Verification and Validation,'' IEEE Std 1012-2016, 2016.
 \end{thebibliography}
 
 \end{document}
